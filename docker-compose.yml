@@ -27,4 +27,4 @@ services:
 volumes:
     node_modules:
 networks:
-    - eventos-cm-app
+    default:
