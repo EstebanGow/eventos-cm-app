@@ -4,7 +4,7 @@ export enum ErrorCode {
     SYNTAX_ERROR = 'SYNTAX_ERROR',
     REPOSITORY_ERROR = 'REPOSITORY_ERROR',
     PUBSUB_ERROR = 'PUBSUB_ERROR',
-    API_CLIENT = 'API_CLIENT',
+    API_CLIENT_ERROR = 'API_CLIENT_ERROR',
 }
 
 export enum StatusCode {

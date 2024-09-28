@@ -1,8 +1,10 @@
-import { example } from './ExampleRouter';
+import { editarEventoRouter, guardarEventoRouter, obtenerEventoRouter, obtenerEventosRouter } from './EventosRouter';
 import { FastifyInstance } from 'fastify';
-import { examplePostSchema, exampleGetSchema } from '@infrastructure/api/swagger';
 
 export const initRoutes = async (application: FastifyInstance): Promise<void> => {
-    application.get(`/:terminal`, exampleGetSchema, example);
-    application.post(`/`, examplePostSchema, example);
+    application.get('/', obtenerEventoRouter);
+    application.get('/evento', obtenerEventoRouter);
+    application.get('/eventos', obtenerEventosRouter);
+    application.post('/evento', guardarEventoRouter);
+    application.put('/evento', editarEventoRouter);
 };

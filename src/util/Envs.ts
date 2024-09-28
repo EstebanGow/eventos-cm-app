@@ -1,9 +1,10 @@
-export const NODE_ENV = process.env.NODE_ENV?.toLowerCase() || 'local';
+export const NODE_ENV = process.env.NODE_ENV?.toLowerCase() || 'development';
 
 export const GCP_PROJECT = process.env.GCP_PROJECT;
-
-export const PREFIX = `/${process.env.DOMAIN}/${process.env.SERVICE_NAME}`;
-
+export const SERVICE_NAME = process.env.SERVICE_NAME || 'eventos-cm-app';
+export const PORT = process.env.PORT || 8081;
 export const HOST = process.env.HOST || 'localhost';
+export const REDIS_PORT = process.env.REDIS_PORT || 6379;
+export const REDIS_HOST = process.env.REDIS_HOST || 'localhost';
 
-export const API_EXAMPLE = process.env.API_EXAMPLE;
+export const PREFIX = `/${SERVICE_NAME}`;

@@ -1,13 +1,19 @@
-FROM node:16-alpine
+FROM node:20
 
-WORKDIR /root/
+RUN mkdir -p /user/src/app
+
+WORKDIR /user/src/app
 
 COPY package.json yarn.lock ./
 
-RUN yarn install --production=true
+RUN yarn
 
-COPY ./dist ./dist/
+ADD . .
 
-COPY .env ./
+RUN yarn build
+
+EXPOSE 8081
+
+RUN ls
 
 CMD [ "yarn", "start" ]

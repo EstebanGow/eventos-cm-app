@@ -1,4 +1,7 @@
 export const TYPES = {
     Firestore: Symbol.for('Firestore'),
-    FirestoreExampleRepository: Symbol.for('FirestoreExampleRepository'),
+    PostgresRepository: Symbol.for('PostgresRepository'),
+    db: Symbol.for('db'),
+    RedisClient: Symbol.for('RedisClient'),
+    RedisGuiaRepository: Symbol.for('RedisGuiaRepository'),
 };

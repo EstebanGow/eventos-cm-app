@@ -1,2 +1,2 @@
-export * from './ExampleRepository';
-export * from './ExampleApiClientRepository';
+export * from './PostgresRepository';
+export * from './RedisRepository';

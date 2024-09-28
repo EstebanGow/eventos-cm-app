@@ -24,4 +24,5 @@ errorHandler(application);
 application.register(fastifySwagger, swagger_config);
 
 // routes
+
 application.register(initRoutes, { prefix: PREFIX });

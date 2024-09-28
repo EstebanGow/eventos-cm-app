@@ -5,7 +5,7 @@ import { application } from './Application';
 import { createDependencyContainer } from '@configuration';
 
 const start = async () => {
-    const port = process.env.PORT || 8080;
+    const port = process.env.PORT || 8081;
     try {
         const server = await application.listen(port, '0.0.0.0');
         application.swagger();

@@ -1,0 +1,30 @@
+version: '3.7'
+services:
+    lb:
+        restart: always
+        image: dockercloud/haproxy
+        links:
+            - eventos-cm-app
+        volumes:
+            - /var/run/docker.sock:/var/run/docker.sock
+        environment:
+            STATS_AUTH: "user:eventos"
+            TIMEOUT_CONNECT: "300s"
+            TIMEOUT_CLIENT: "300s"
+            TIMEOUT_SERVER: "300s"
+        ports:
+            - '8081:8081'
+        
+    eventos-cm-app:
+        restart: always
+        build: .
+        scale: 1
+        environment:
+            - 'VIRTUAL_HOST=*:8081'
+        volumes:
+            - .:/eventos-cm-app
+            - node_modules:/eventos-cm-app/node_modules
+volumes:
+    node_modules:
+networks:
+    default: eventos-cm-app

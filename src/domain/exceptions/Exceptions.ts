@@ -21,23 +21,26 @@ export class BadMessageException extends Exception {
         super(message, ErrorCode.BAD_MESSAGE, StatusCode.OK, cause);
     }
 }
+export class ApiRestException extends Exception {
+    constructor(message: string, cause: string) {
+        super(message, ErrorCode.API_CLIENT_ERROR, StatusCode.INTERNAL_ERROR, cause);
+    }
+}
 
 export class RepositoryException extends Exception {
-    constructor() {
-        const message = 'Ocurrió un error al momento de guardar la guía';
-        super(message, ErrorCode.REPOSITORY_ERROR, StatusCode.INTERNAL_ERROR);
+    constructor(
+        message: string,
+        StatusCode: number,
+        ErrorCode: ErrorCode,
+        cause = 'Ocurrió un error en el repositorio',
+    ) {
+        super(message, ErrorCode, StatusCode, cause);
     }
 }
 
 export class PubSubException extends Exception {
     constructor(message: string, cause: string) {
         super(message, ErrorCode.PUBSUB_ERROR, StatusCode.INTERNAL_ERROR, cause);
-    }
-}
-
-export class ApiClientException extends Exception {
-    constructor(message: string) {
-        super(message, ErrorCode.API_CLIENT, StatusCode.OK);
     }
 }
 
