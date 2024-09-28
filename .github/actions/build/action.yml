@@ -1,0 +1,11 @@
+name: 'Build'
+description: 'Build and install dependencies'
+runs:
+    using: 'composite'
+    steps:
+        - name: Instalando dependencias
+          run: yarn
+          shell: sh
+        - name: Build aplicacion
+          run: yarn build
+          shell: sh

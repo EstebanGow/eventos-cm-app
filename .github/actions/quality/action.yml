@@ -1,0 +1,11 @@
+name: "Quality"
+description: "Quality"
+runs:
+  using: "composite"
+  steps:
+    - name: Lint
+      run: yarn lint
+      shell: sh
+    - name: Test
+      run: yarn test
+      shell: sh

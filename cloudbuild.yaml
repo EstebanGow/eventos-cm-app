@@ -1,0 +1,23 @@
+substitutions:
+    _SERVICE_NAME: ''
+    _PROJECT_ID: ''
+    _COMMIT_SHA: ''
+
+images:
+    - gcr.io/${_PROJECT_ID}/${_SERVICE_NAME}
+
+steps:
+    - name: 'gcr.io/cloud-builders/docker'
+      entrypoint: 'bash'
+      args: ['-c', 'docker pull gcr.io/${_PROJECT_ID}/${_SERVICE_NAME}:latest || exit 0']
+    - id: 'build image'
+      name: 'gcr.io/cloud-builders/docker'
+      args:
+          - build
+          - --tag=gcr.io/${_PROJECT_ID}/${_SERVICE_NAME}:latest
+          - --tag=gcr.io/${_PROJECT_ID}/${_SERVICE_NAME}:${_COMMIT_SHA}
+          - --cache-from=gcr.io/${_PROJECT_ID}/${_SERVICE_NAME}:latest
+          - .
+    - id: 'push image'
+      name: 'gcr.io/cloud-builders/docker'
+      args: ['push', 'gcr.io/${_PROJECT_ID}/${_SERVICE_NAME}:${_COMMIT_SHA}']

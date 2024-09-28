@@ -1,0 +1,67 @@
+{
+  "name": "example",
+  "version": "1.0.0",
+  "main": "dist/infrastructure/api/Server.js",
+  "description": "Proyecto que contiene la plantilla para los microservicios de Coordinadora",
+  "license": "UNLICENSED",
+  "private": true,
+  "author": {
+    "email": "it@coordinadora.com",
+    "name": "Coordinadora Mercantil S.A"
+  },
+  "scripts": {
+    "build": "rimraf dist && tsc -p tsconfig.build.json",
+    "infra-as-code": "echo Infrastructure as code",
+    "lint": "eslint . --ext .ts --fix",
+    "format": "prettier --write \"./src/**/*.ts\"",
+    "format-check": "prettier --list-different \"./src/**/*.ts\"",
+    "dev": "tsc-watch -p tsconfig.build.json --onSuccess \"node dist/infrastructure/api/Server.js\"",
+    "start": "node dist/infrastructure/api/Server.js",
+    "start:debug": "tsc-watch -p tsconfig.build.json --onSuccess \"node --inspect-brk dist/infrastructure/api/Server.js\"",
+    "test": "jest --color --verbose --no-cache",
+    "coverage": "jest --coverage",
+    "husky:install": "husky install"
+  },
+  "dependencies": {
+    "@fastify/cors": "^7.0.0",
+    "@fastify/formbody": "^6.0.0",
+    "@fastify/helmet": "^8.0.0",
+    "@fastify/swagger": "^6.0.0",
+    "@google-cloud/firestore": "6.7.0",
+    "dotenv": "16.3.1",
+    "fastify": "3.29.4",
+    "got": "11.8.6",
+    "inversify": "6.0.1",
+    "joi": "17.6.0",
+    "module-alias": "2.2.3",
+    "reflect-metadata": "0.1.13"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "17.7.1",
+    "@commitlint/config-conventional": "17.7.0",
+    "@types/jest": "29.5.4",
+    "@types/node": "20.5.9",
+    "@types/supertest": "2.0.12",
+    "@typescript-eslint/eslint-plugin": "5.21.0",
+    "@typescript-eslint/parser": "5.21.0",
+    "eslint": "8.14.0",
+    "eslint-config-prettier": "8.5.0",
+    "eslint-plugin-prettier": "4.0.0",
+    "husky": "8.0.3",
+    "jest": "27.5.1",
+    "mock-cloud-firestore": "0.12.0",
+    "prettier": "2.6.2",
+    "rimraf": "5.0.1",
+    "ts-jest": "27.1.4",
+    "ts-node": "10.7.0",
+    "tsc-watch": "5.0.3",
+    "typescript": "4.6.3"
+  },
+  "_moduleAliases": {
+    "@application": "dist/application",
+    "@domain": "dist/domain",
+    "@infrastructure": "dist/infrastructure",
+    "@configuration": "dist/configuration",
+    "@util": "dist/util"
+  }
+}
