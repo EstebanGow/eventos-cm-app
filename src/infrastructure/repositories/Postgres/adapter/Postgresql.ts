@@ -7,9 +7,9 @@ import { CM_CONECTION_PARAMETERS } from '.';
 
 const getConnectionParameters = (db: string): IConnectionParameters => {
     const DATABASES: IEnvironments<IConnectionParameters> = {
-        development: { host: 'localhost' },
-        testing: { host: 'localhost' },
-        production: { host: 'localhost' },
+        development: { host: process.env.POSTGRES_HOST },
+        testing: { host: process.env.POSTGRES_HOST },
+        production: { host: process.env.POSTGRES_HOST },
     };
 
     const DATABASE = DATABASES[NODE_ENV] || DATABASES.development;

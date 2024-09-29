@@ -9,7 +9,8 @@ import { PostgresRepository } from '@domain/repository';
 export class EventosAppService {
     private postgresqlRepository = DEPENDENCY_CONTAINER.get<PostgresRepository>(TYPES.PostgresRepository);
     async obtenerEventoService(): Promise<Response<string | null>> {
-        return Result.ok();
+        const response = await this.postgresqlRepository.obtenerEventos();
+        return Result.ok(response);
     }
 
     async obtenerEventosService(): Promise<Response<string | null>> {

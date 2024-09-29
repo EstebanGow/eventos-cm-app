@@ -8,9 +8,20 @@ import { ExampleEntity } from '@domain/entities';
 @injectable()
 export class ClientPostgresRepository implements PostgresRepository {
     private db = DEPENDENCY_CONTAINER.get<IDatabase<IMain>>(TYPES.db);
+
     guardarEvento(example: ExampleEntity): Promise<void> {
         console.log(example);
         throw new Error('Method not implemented.');
+    }
+
+    async obtenerEventos(): Promise<any> {
+        try {
+            const query = `SELECT * FROM eventos`;
+            const response = await this.db.manyOrNone(query);
+            return response;
+        } catch ({ message, statusCode, code, cause }: any) {
+            throw new RepositoryException(message as string, statusCode as number, code as ErrorCode, cause as string);
+        }
     }
 
     async guardarProcesoExportacion(guias: any, numeroGuias: number, tipo: string): Promise<number> {

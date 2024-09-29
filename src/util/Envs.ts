@@ -1,5 +1,4 @@
 export const NODE_ENV = process.env.NODE_ENV?.toLowerCase() || 'development';
-
 export const GCP_PROJECT = process.env.GCP_PROJECT;
 export const SERVICE_NAME = process.env.SERVICE_NAME || 'eventos-cm-app';
 export const PORT = process.env.PORT || 8081;
