@@ -1,3 +1,3 @@
-export interface IEventoOut {
+export interface IEventoId {
     idEvento: number | null;
 }

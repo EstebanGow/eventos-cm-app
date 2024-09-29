@@ -1,6 +1,12 @@
 export interface IEvento {
     nombre: string;
-    fechaHora: string;
+    fecha: string;
+    horaInicio: string;
+    horaFin: string;
+    capacidad: number;
+    precio: number;
+    descripcion: string;
+    tipoEvento: number;
     direccion: IDireccion;
 }
 

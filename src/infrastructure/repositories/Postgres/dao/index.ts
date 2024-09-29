@@ -1,1 +1,2 @@
-export * from './ClientPostgresRepository';
+export * from './EventosPostgresRepository';
+export * from './UsuariosPostgresRepository';

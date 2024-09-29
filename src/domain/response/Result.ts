@@ -15,6 +15,14 @@ export class Result {
         };
     }
 
+    static error<T>(data?: T): Response<T | null> {
+        return {
+            isError: true,
+            data: data || null,
+            timestamp: new Date(),
+        };
+    }
+
     static failure<E = Exception>(exception: E): E {
         throw exception;
     }

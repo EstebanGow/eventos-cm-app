@@ -10,7 +10,7 @@ export const obtenerEventoRouter = async (req: FastifyRequest, reply: FastifyRep
     const eventosAppService = DEPENDENCY_CONTAINER.get(EventosAppService);
     const { id } = validateData<IEventoId>(IEventoIdSchema, req.params);
     const response = await eventosAppService.obtenerEventoService(id);
-    return reply.send({ ...response, id });
+    return reply.send({ ...response });
 };
 
 export const obtenerEventosRouter = async (_req: FastifyRequest, reply: FastifyReply): Promise<FastifyReply | void> => {
@@ -40,5 +40,12 @@ export const editarEventoRouter = async (req: FastifyRequest, reply: FastifyRepl
     const eventosAppService = DEPENDENCY_CONTAINER.get(EventosAppService);
     const data = validateData<IEditarEvento>(IEditarEventoSchema, req.body);
     const response = await eventosAppService.editarEventoService(data);
+    return reply.send({ ...response });
+};
+
+export const eliminarEventoRouter = async (req: FastifyRequest, reply: FastifyReply): Promise<FastifyReply | void> => {
+    const eventosAppService = DEPENDENCY_CONTAINER.get(EventosAppService);
+    const { id } = validateData<IEventoId>(IEventoIdSchema, req.params);
+    const response = await eventosAppService.eliminarEventoService(id);
     return reply.send({ ...response });
 };

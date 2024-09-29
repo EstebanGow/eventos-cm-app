@@ -1,1 +1,1 @@
-export * from './IEventoOut';
+export * from './IEventoId';

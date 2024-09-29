@@ -1,1 +1,1 @@
-export * from './ExampleDomainService';
+export * from './EventosDomainService';
