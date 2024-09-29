@@ -4,7 +4,12 @@ import { Result, Response } from '@domain/response';
 import { IEventosPostgresRepository, IUsuariosPostgresRepository } from '@domain/repository';
 import { IEditarEvento, IEvento, IUsuarioEvento } from '@application/data';
 import { IEventoId } from '@application/data/out/IEventoId';
-import { validarCapacidadEvento, validarCreacionEvento, validarEdicionEvento, validarPermisosEventoUsuario } from '@domain/services';
+import {
+    validarCapacidadEvento,
+    validarCreacionEvento,
+    validarEdicionEvento,
+    validarPermisosEventoUsuario,
+} from '@domain/services';
 
 @injectable()
 export class EventosAppService {
