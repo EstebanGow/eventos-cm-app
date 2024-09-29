@@ -28,3 +28,5 @@ volumes:
     node_modules:
 networks:
     default:
+        external:
+            name: br1
