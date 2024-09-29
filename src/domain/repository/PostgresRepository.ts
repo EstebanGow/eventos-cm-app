@@ -1,5 +1,7 @@
-import { ExampleEntity } from '@domain/entities';
+import { IEvento, IUsuarioEvento } from '@application/data';
 export interface PostgresRepository {
-    guardarEvento(example: ExampleEntity): Promise<void>;
-    obtenerEventos(): Promise<any>;
+    guardarEventoTransaccion(example: IEvento): Promise<number>;
+    editarEventoTransaccion(example: IEvento): Promise<void>;
+    inscribirUsuarioEvento(data: IUsuarioEvento): Promise<void>;
+    obtenerEventos(idEvento: number | null): Promise<any>;
 }
