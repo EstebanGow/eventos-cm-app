@@ -52,7 +52,9 @@ export class EventosPostgresRepository implements IEventosPostgresRepository {
                                 'id', d.id,
                                 'pais', d.pais,
                                 'ciudad', d.ciudad,
-                                'direccion', d.direccion
+                                'direccion', d.direccion,
+                                'longitud', d.longitud,
+                                'latitud', d.latitud
                             ) as direccion,
                             CASE WHEN COUNT(u.id) > 0 THEN
                             json_agg(jsonb_build_object(
@@ -83,6 +85,8 @@ export class EventosPostgresRepository implements IEventosPostgresRepository {
                             d.id, 
                             d.ciudad, 
                             d.direccion, 
+                            d.longitud,
+                            d.latitud,
                             te.id, 
                             te.descripcion;`;
             const response = await this.db.manyOrNone(query);
@@ -136,12 +140,18 @@ export class EventosPostgresRepository implements IEventosPostgresRepository {
         try {
             const query = `
                 INSERT INTO
-                direcciones(pais, ciudad, direccion)
-                VALUES ($1, $2, $3)
+                direcciones(pais, ciudad, direccion, longitud, latitud)
+                VALUES ($1, $2, $3, $4, $5)
                 RETURNING id`;
             const response = await t.one(
                 query,
-                [data.direccion.pais, data.direccion.ciudad, data.direccion.direccion],
+                [
+                    data.direccion.pais,
+                    data.direccion.ciudad,
+                    data.direccion.direccion,
+                    data.direccion.longitud,
+                    data.direccion.latitud,
+                ],
                 (t) => t.id,
             );
             return response;

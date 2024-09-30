@@ -5,7 +5,7 @@ import { ApiClientRest } from '@domain/api';
 import { DEPENDENCY_CONTAINER, TYPES } from '@configuration';
 import { RedisGuiaRepository } from '@infrastructure/repositories/redis';
 import { IDireccion, IEvento } from '@application/data';
-import { TOKEN_MAPBOX, URL_MAPBOX } from 'util/Envs';
+import { TOKEN_MAPBOX, URL_MAPBOX } from '@util';
 
 @injectable()
 export class ApiClient implements ApiClientRest {
@@ -37,13 +37,14 @@ export class ApiClient implements ApiClientRest {
 
     async obtenerCoordenadas(direccion: IDireccion): Promise<any> {
         try {
+            const direccionUrl = encodeURIComponent(direccion.direccion);
             const response = await axios({
                 method: 'get',
-                url: `${URL_MAPBOX}${direccion.direccion},${direccion.ciudad}&country=CO&access_token=${TOKEN_MAPBOX}`,
+                url: `${URL_MAPBOX}${direccionUrl},${direccion.ciudad}Colombia.json?access_token=${TOKEN_MAPBOX}`,
             });
             const data = response.data;
-            console.log(data);
-            return { data };
+
+            return { longitude: data['features'][0]['center'][0], latitude: data['features'][0]['center'][1] };
         } catch (e: any) {
             throw new Error('Ciudades', e.toString());
         }

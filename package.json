@@ -28,18 +28,21 @@
     "@fastify/helmet": "^8.0.0",
     "@fastify/swagger": "^6.0.0",
     "@google-cloud/firestore": "6.7.0",
+    "@types/uuid": "^10.0.0",
     "axios": "^1.7.7",
     "dotenv": "16.3.1",
     "fastify": "3.29.4",
     "got": "11.8.6",
     "inversify": "6.0.1",
     "joi": "17.6.0",
+    "joi-to-swagger": "^6.2.0",
     "module-alias": "2.2.3",
     "moment": "^2.30.1",
     "moment-timezone": "^0.5.45",
     "pg-promise": "^11.9.1",
     "redis": "^4.7.0",
-    "reflect-metadata": "0.1.13"
+    "reflect-metadata": "0.1.13",
+    "uuid": "^10.0.0"
   },
   "devDependencies": {
     "@commitlint/cli": "17.7.1",

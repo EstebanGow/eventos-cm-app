@@ -14,4 +14,6 @@ export interface IDireccion {
     pais: string;
     ciudad: string;
     direccion: string;
+    latitud?: string;
+    longitud?: string;
 }

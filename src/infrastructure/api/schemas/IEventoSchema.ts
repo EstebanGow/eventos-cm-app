@@ -7,9 +7,9 @@ export const IEventoSchema = Joi.object<IEvento>({
     horaInicio: Joi.string().required(),
     horaFin: Joi.string().required(),
     descripcion: Joi.string().required(),
-    precio: Joi.number().required(),
-    capacidad: Joi.number().required(),
-    tipoEvento: Joi.number().required().valid(1, 2),
+    precio: Joi.number().integer().required(),
+    capacidad: Joi.number().integer().required(),
+    tipoEvento: Joi.number().integer().required().valid(1, 2),
     direccion: Joi.object({
         pais: Joi.string().required(),
         ciudad: Joi.string().required(),

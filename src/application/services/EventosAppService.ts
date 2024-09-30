@@ -11,6 +11,8 @@ import {
     validarEdicionEvento,
     validarPermisosEventoUsuario,
 } from '@domain/services';
+import { ApiClient } from '@infrastructure/api-client';
+import { ApiClientRest } from '@domain/api';
 
 @injectable()
 export class EventosAppService {
@@ -20,6 +22,7 @@ export class EventosAppService {
     private usuariosPostgresqlRepository = DEPENDENCY_CONTAINER.get<IUsuariosPostgresRepository>(
         TYPES.UsuariosPostgresRepository,
     );
+    private apiClient = DEPENDENCY_CONTAINER.get<ApiClientRest>(ApiClient);
 
     async obtenerEventoService(idEvento: number): Promise<Response<string | null>> {
         const response = await this.eventosPostgresqlRepository.obtenerEventos(idEvento);
@@ -43,6 +46,9 @@ export class EventosAppService {
 
     async guardarEventoService(data: IEvento): Promise<Response<IEventoId | null>> {
         validarCreacionEvento(data);
+        const geoReferenciacion = await this.apiClient.obtenerCoordenadas(data.direccion);
+        data.direccion.longitud = geoReferenciacion.longitude;
+        data.direccion.latitud = geoReferenciacion.latitude;
         const response = await this.eventosPostgresqlRepository.guardarEventoTransaccion(data);
         return Result.ok({ idEvento: response });
     }

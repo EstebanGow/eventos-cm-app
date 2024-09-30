@@ -15,11 +15,12 @@ import {
     obtenerUsuariosRouter,
 } from './UsuariosRouter';
 import { obtenerPlantillaRouter } from './PlantillasRouter';
+import { eventosPostSchema } from '../swagger';
 
 export const initRoutes = async (application: FastifyInstance): Promise<void> => {
     application.get('/evento/:id', obtenerEventoRouter);
     application.get('/eventos', obtenerEventosRouter);
-    application.post('/evento', guardarEventoRouter);
+    application.post('/evento', eventosPostSchema, guardarEventoRouter);
     application.post('/evento/inscribir-usuario', inscribirUsuarioEventoRouter);
     application.put('/evento', editarEventoRouter);
     application.delete('/evento/eliminar/:id', eliminarEventoRouter);
