@@ -5,6 +5,7 @@ import { IEventosPostgresRepository, IUsuariosPostgresRepository } from '@domain
 import { IEditarEvento, IEvento, IUsuarioEvento } from '@application/data';
 import { IEventoId } from '@application/data/out/IEventoId';
 import {
+    calcularAsistentes,
     validarCapacidadEvento,
     validarCreacionEvento,
     validarEdicionEvento,
@@ -62,8 +63,9 @@ export class EventosAppService {
         return Result.ok();
     }
 
-    async obtenerIndicadoresEventos(): Promise<Response<any | null>> {
-        const response = await this.eventosPostgresqlRepository.obtenerEventos(null);
-        return Result.ok(response);
+    async obtenerMetricasService(): Promise<Response<any | null>> {
+        const eventos = await this.eventosPostgresqlRepository.obtenerEventos(null);
+        const resultado = calcularAsistentes(eventos);
+        return Result.ok(resultado);
     }
 }

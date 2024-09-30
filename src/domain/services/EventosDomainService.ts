@@ -35,12 +35,6 @@ export const validarCapacidadEvento = (evento: any) => {
     );
 };
 
-export const calcularAsistentes = (eventos: any) => {
-    for (const evento of eventos) {
-        console.log(evento);
-    }
-};
-
 export const validarCreacionEvento = (evento: IEvento) => {
     const fechaActual = moment().tz('America/Bogota').format('YYYY-MM-DD HH:mm');
     const fechaEvento = moment(`${evento.fecha} ${evento.horaInicio}`).format('YYYY-MM-DD HH:mm');
@@ -78,4 +72,23 @@ const validarExistenciaUsuario = (usuario: any) => {
     if (!usuario.length) {
         throw new BadMessageException('Error', `No existe el usuario enviado`);
     }
+};
+
+function obtenerDiaSemana(fecha: string) {
+    const date = new Date(fecha);
+    const diaSemana = ['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'];
+    return diaSemana[date.getDay()];
+}
+
+export const calcularAsistentes = (eventos: any) => {
+    const asistentesPorDia: any = {};
+    eventos.forEach((evento: any) => {
+        const diaSemana = obtenerDiaSemana(evento.fecha);
+        if (!asistentesPorDia[diaSemana]) {
+            asistentesPorDia[diaSemana] = 0;
+        }
+        asistentesPorDia[diaSemana] += evento.usuarios_inscritos;
+    });
+
+    return asistentesPorDia;
 };

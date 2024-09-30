@@ -49,3 +49,12 @@ export const eliminarEventoRouter = async (req: FastifyRequest, reply: FastifyRe
     const response = await eventosAppService.eliminarEventoService(id);
     return reply.send({ ...response });
 };
+
+export const obtenerMetricasRouter = async (
+    _req: FastifyRequest,
+    reply: FastifyReply,
+): Promise<FastifyReply | void> => {
+    const eventosAppService = DEPENDENCY_CONTAINER.get(EventosAppService);
+    const response = await eventosAppService.obtenerMetricasService();
+    return reply.send({ ...response });
+};
