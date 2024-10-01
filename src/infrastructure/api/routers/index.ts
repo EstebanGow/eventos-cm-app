@@ -14,7 +14,7 @@ import {
     obtenerUsuarioRouter,
     obtenerUsuariosRouter,
 } from './UsuariosRouter';
-import { obtenerPlantillaRouter } from './PlantillasRouter';
+import { obtenerPlantillaRouter, procesarArchivoRouter } from './PlantillasRouter';
 import {
     eventoGetSchema,
     eventosGetSchema,
@@ -41,10 +41,14 @@ export const initRoutes = async (application: FastifyInstance): Promise<void> =>
     application.delete('/usuarios/eliminar/:id', eliminarUsuarioRouter);
 
     application.get('/plantilla', obtenerPlantillaRouter);
+    application.post('/plantilla/carga', procesarArchivoRouter);
     application.post('/autenticar', autenticarUsuarioRouter);
 
     application.addHook('onRequest', async (request, reply) => {
-        if (request.routerPath !== '/eventos-cm-app/autenticar') {
+        if (
+            request.routerPath !== '/eventos-cm-app/autenticar' &&
+            request.routerPath !== '/eventos-cm-app/plantilla/carga'
+        ) {
             await verificarTokenRouter(request, reply);
         }
     });

@@ -5,5 +5,5 @@ export const TYPES = {
     AutenticacionPostgresRepository: Symbol.for('AutenticacionPostgresRepository'),
     db: Symbol.for('db'),
     RedisClient: Symbol.for('RedisClient'),
-    RedisGuiaRepository: Symbol.for('RedisGuiaRepository'),
+    RedisEventosRepository: Symbol.for('RedisEventosRepository'),
 };

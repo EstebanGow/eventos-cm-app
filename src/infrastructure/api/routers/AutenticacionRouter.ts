@@ -2,7 +2,7 @@ import { DEPENDENCY_CONTAINER } from '@configuration';
 import { FastifyRequest, FastifyReply } from 'fastify';
 import { validateData } from '../util';
 import { IAuteinticar } from '@application/data';
-import { IAutenticarSchema } from '../schemas';
+import { autenticarSchema } from '../schemas';
 import jwt from 'jsonwebtoken';
 
 import { AutenticacionAppService } from '@application/services/AutenticacionAppService';
@@ -10,7 +10,7 @@ import { JWT_SECRET } from '@util';
 
 export const autenticarUsuarioRouter = async (req: FastifyRequest, reply: FastifyReply) => {
     const autenticarAppService = DEPENDENCY_CONTAINER.get(AutenticacionAppService);
-    const data = validateData<IAuteinticar>(IAutenticarSchema, req.body);
+    const data = validateData<IAuteinticar>(autenticarSchema, req.body);
     const response = await autenticarAppService.autenticarUsuarioService(data);
     return reply.send(response);
 };

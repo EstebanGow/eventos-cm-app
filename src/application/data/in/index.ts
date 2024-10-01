@@ -5,3 +5,4 @@ export * from './IEventoId';
 export * from './IUsuario';
 export * from './IUsuarioId';
 export * from './IAuteinticar';
+export * from './ICargaMasiva';

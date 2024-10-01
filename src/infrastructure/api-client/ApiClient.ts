@@ -3,13 +3,13 @@ import 'reflect-metadata';
 import axios from 'axios';
 import { ApiClientRest } from '@domain/api';
 import { DEPENDENCY_CONTAINER, TYPES } from '@configuration';
-import { RedisGuiaRepository } from '@infrastructure/repositories/redis';
+import { RedisEventosRepository } from '@infrastructure/repositories/redis';
 import { IDireccion, IEvento } from '@application/data';
 import { TOKEN_MAPBOX, URL_MAPBOX } from '@util';
 
 @injectable()
 export class ApiClient implements ApiClientRest {
-    private redisClient = DEPENDENCY_CONTAINER.get<RedisGuiaRepository>(TYPES.RedisGuiaRepository);
+    private redisClient = DEPENDENCY_CONTAINER.get<RedisEventosRepository>(TYPES.RedisEventosRepository);
 
     async ubicacionesCercanas(evento: IEvento): Promise<any> {
         try {

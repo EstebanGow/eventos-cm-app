@@ -1,8 +1,7 @@
-import { IEditarEvento } from '@application/data';
+import { IEvento } from '@application/data';
 import Joi from 'joi';
 
-export const IEditarEventoSchema = Joi.object<IEditarEvento>({
-    idEvento: Joi.number().integer().required().example(4),
+export const eventoSchema = Joi.object<IEvento>({
     nombre: Joi.string().required().max(120).example('Reunion'),
     fecha: Joi.string().required().example('2024-10-07'),
     horaInicio: Joi.string().required().example('10:00'),

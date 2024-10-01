@@ -46,7 +46,8 @@
     "pg-promise": "^11.9.1",
     "redis": "^4.7.0",
     "reflect-metadata": "0.1.13",
-    "uuid": "^10.0.0"
+    "uuid": "^10.0.0",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@commitlint/cli": "17.7.1",

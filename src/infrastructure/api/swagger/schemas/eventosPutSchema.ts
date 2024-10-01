@@ -1,13 +1,13 @@
 import { DEFAULT_400_ERROR_SCHEMA, DEFAULT_500_ERROR_SCHEMA, beauty, validationParser } from '../config';
 import { v4 as uuidv4 } from 'uuid';
 import { SwaggerTag } from '@domain/enum';
-import { IEditarEventoSchema } from '@infrastructure/api/schemas/IEditarEventoSchema';
+import { editarEventoSchema } from '@infrastructure/api/schemas';
 export const eventosPutSchema = {
     $id: uuidv4(),
     schema: {
         description: 'Editar un evento',
         tags: [SwaggerTag.Eventos],
-        body: validationParser(IEditarEventoSchema),
+        body: validationParser(editarEventoSchema),
         response: {
             '200': beauty(
                 {

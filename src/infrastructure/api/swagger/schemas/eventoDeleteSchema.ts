@@ -1,13 +1,14 @@
 import { DEFAULT_400_ERROR_SCHEMA, DEFAULT_500_ERROR_SCHEMA, beauty, validationParser } from '../config';
 import { v4 as uuidv4 } from 'uuid';
 import { SwaggerTag } from '@domain/enum';
-import { IEventoIdSchema } from '@infrastructure/api/schemas';
+import { eventoIdSchema } from '@infrastructure/api/schemas';
+
 export const eventoDeleteSchema = {
     $id: uuidv4(),
     schema: {
         description: 'Eliminar un Evento',
         tags: [SwaggerTag.Eventos],
-        body: validationParser(IEventoIdSchema),
+        body: validationParser(eventoIdSchema),
         response: {
             '200': beauty(
                 {

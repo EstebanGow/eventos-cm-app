@@ -4,7 +4,7 @@ import { DEPENDENCY_CONTAINER, TYPES } from '@configuration';
 import { RedisRepository } from '@domain/repository';
 
 @injectable()
-export class RedisGuiaRepository implements RedisRepository {
+export class RedisEventosRepository implements RedisRepository {
     private redis = DEPENDENCY_CONTAINER.get<RedisClientType>(TYPES.RedisClient);
     async getOne(data: any): Promise<any> {
         try {

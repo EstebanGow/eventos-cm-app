@@ -13,7 +13,7 @@ import {
     UsuariosPostgresRepository,
     db,
 } from '@infrastructure/repositories/Postgres';
-import { redisClient, RedisGuiaRepository } from '@infrastructure/repositories/redis';
+import { redisClient, RedisEventosRepository } from '@infrastructure/repositories/redis';
 import { IDatabase, IMain } from 'pg-promise';
 import { ApiClient } from '@infrastructure/api-client';
 import { AutenticacionAppService } from '@application/services/AutenticacionAppService';
@@ -36,6 +36,8 @@ export const createDependencyContainer = (): void => {
     DEPENDENCY_CONTAINER.bind<IAutenticacionIPostgresRepository>(TYPES.AutenticacionPostgresRepository)
         .to(AutenticacionPostgresRepository)
         .inSingletonScope();
-    DEPENDENCY_CONTAINER.bind<RedisRepository>(TYPES.RedisGuiaRepository).to(RedisGuiaRepository).inSingletonScope();
+    DEPENDENCY_CONTAINER.bind<RedisRepository>(TYPES.RedisEventosRepository)
+        .to(RedisEventosRepository)
+        .inSingletonScope();
     DEPENDENCY_CONTAINER.bind<IDatabase<IMain>>(TYPES.db).toConstantValue(db);
 };

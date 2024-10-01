@@ -1,7 +1,7 @@
 import { IUsuario } from '@application/data';
 import Joi from 'joi';
 
-export const IUsuarioSchema = Joi.object<IUsuario>({
+export const usuarioSchema = Joi.object<IUsuario>({
     nombres: Joi.string().required(),
     apellidos: Joi.string().required(),
     identificacion: Joi.string().required(),
