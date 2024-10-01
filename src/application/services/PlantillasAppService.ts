@@ -13,7 +13,7 @@ export class PlantillasAppService {
 
     private getFile(fileName: string): string {
         try {
-            const file = fs.readFileSync(`/Users/usuario/Proyectos/eventos-cm-app/archivos/${fileName}`);
+            const file = fs.readFileSync(`/home/yohan_gomez/eventos-cm-app/archivos/${fileName}`);
             return file.toString('base64');
         } catch (error) {
             throw new Error('Error generando el archivo');
