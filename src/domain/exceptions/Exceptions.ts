@@ -27,6 +27,8 @@ export class ApiRestException extends Exception {
     }
 }
 
+
+
 export class RepositoryException extends Exception {
     constructor(
         message: string,

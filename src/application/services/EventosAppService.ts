@@ -29,14 +29,14 @@ export class EventosAppService {
         return Result.ok(response);
     }
 
-    async eliminarEventoService(idEvento: number): Promise<Response<string | null>> {
+    async eliminarEventoService(idEvento: number): Promise<Response<any | null>> {
         const evento = await this.eventosPostgresqlRepository.obtenerEventos(idEvento);
         if (!evento.length) {
             return Result.error(`no existe el evento ${idEvento}`);
         }
         const idDireccion = evento[0].direccion.id;
         await this.eventosPostgresqlRepository.eliminarEventoTransaccion(idEvento, idDireccion);
-        return Result.ok();
+        return Result.ok({ message: 'Evento eliminado correctamente' });
     }
 
     async obtenerEventosService(): Promise<Response<any | null>> {
@@ -53,11 +53,11 @@ export class EventosAppService {
         return Result.ok({ idEvento: response });
     }
 
-    async editarEventoService(data: IEditarEvento): Promise<Response<string | null>> {
+    async editarEventoService(data: IEditarEvento): Promise<Response<any | null>> {
         const evento = await this.eventosPostgresqlRepository.obtenerEventos(data.idEvento);
         validarEdicionEvento(data, evento);
         await this.eventosPostgresqlRepository.editarEventoTransaccion(data);
-        return Result.ok();
+        return Result.ok({ idEvento: data.idEvento });
     }
 
     async inscribirUsuarioEventoService(data: IUsuarioEvento): Promise<Response<string | null>> {
@@ -71,7 +71,10 @@ export class EventosAppService {
 
     async obtenerMetricasService(): Promise<Response<any | null>> {
         const eventos = await this.eventosPostgresqlRepository.obtenerEventos(null);
-        const resultado = calcularAsistentes(eventos);
-        return Result.ok(resultado);
+        const { asistentesPorDia, totalUsuarios } = calcularAsistentes(eventos);
+        return Result.ok({
+            dias: asistentesPorDia,
+            totalUsuarios: totalUsuarios,
+        });
     }
 }

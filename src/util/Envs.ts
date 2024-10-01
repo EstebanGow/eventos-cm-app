@@ -11,3 +11,4 @@ export const TOKEN_MAPBOX =
     process.env.TOKEN_MAPBOX ||
     'pk.eyJ1Ijoic2ViYXNtb250b3lhNyIsImEiOiJjbTFvZndqdXMxMjFrMnBwcnBldnRxOWg1In0.6nmiQy1-Jp7eQUKQxhoNhw';
 export const URL_MAPBOX = 'https://api.mapbox.com/geocoding/v5/mapbox.places/';
+export const JWT_SECRET = process.env.JWT_SECRET || 'Authcoordieventos';

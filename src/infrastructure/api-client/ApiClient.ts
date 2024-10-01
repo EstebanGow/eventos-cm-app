@@ -17,7 +17,7 @@ export class ApiClient implements ApiClientRest {
             if (!LugaresCercanos) {
                 const response = await axios({
                     method: 'post',
-                    url: ``,
+                    url: `${URL_MAPBOX}${evento.direccion.direccion},${evento.direccion.ciudad}Colombia.json?access_token=${TOKEN_MAPBOX}`,
                     data: {
                         codigosCiudades: [
                             {

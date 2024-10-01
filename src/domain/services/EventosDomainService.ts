@@ -82,13 +82,15 @@ function obtenerDiaSemana(fecha: string) {
 
 export const calcularAsistentes = (eventos: any) => {
     const asistentesPorDia: any = {};
+    let totalUsuarios = 0;
     eventos.forEach((evento: any) => {
         const diaSemana = obtenerDiaSemana(evento.fecha);
         if (!asistentesPorDia[diaSemana]) {
             asistentesPorDia[diaSemana] = 0;
         }
         asistentesPorDia[diaSemana] += evento.usuarios_inscritos;
+        totalUsuarios += evento.usuarios_inscritos;
     });
 
-    return asistentesPorDia;
+    return { asistentesPorDia, totalUsuarios };
 };
