@@ -1,6 +1,7 @@
-# Plantilla de microservicio
+# Servicio Gestion Eventos Api REST
 
-En este repositorio se encuentran la estructura de carpetas y todos los archivos de configuración para un microservicio en Node.
+Servicio para la creacion de eventos, usuarios e inscripción de usuarios a eventos
+
 
 ## Estructura del proyecto
 
@@ -14,8 +15,11 @@ En este repositorio se encuentran la estructura de carpetas y todos los archivos
 │   │   └── util
 │   ├── configuration
 │   ├── domain
+|   |   |__ api
 │   │   ├── entities
+|   |   |__ enum  
 │   │   ├── exceptions
+|   |   |__ model 
 │   │   ├── repository
 │   │   ├── response
 │   │   └── services
@@ -25,10 +29,15 @@ En este repositorio se encuentran la estructura de carpetas y todos los archivos
 │   │   │   ├── routers
 │   │   │   ├── schemas
 │   │   │   └── util
+|   |   |__ api-client        
 │   │   └── repositories
-│   │       └── firestore
-│   │           ├── adapter
-│   │           └── dao
+│   │       |── Postgres
+│   │       |    ├── adapter
+│   │       |    └── dao
+|   |       |__ redis
+|   |            |__ adapter
+|   |            |__ dao        
+|   |      
 │   └── util
 ├── docs
 ├── infra
