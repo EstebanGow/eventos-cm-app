@@ -65,11 +65,14 @@ jobs:
       run: yarn upgrade cliui string-width
 
     - name: Ejecutar pruebas
-      run: yarn test  
+      run: yarn test 
+ 
+    - name: Limpiar dependencias
+      run: yarn cache clean && rm -rf node_modules
 
     - name: Deploy 
       run: |
-        sudo chmod -R 777 yohan_gomez@$INSTANCE:/home/yohan_gomez/$SERVICE_NAME/node_modules/ && gcloud compute scp --recurse /home/runner/work/$SERVIE_NAME/$SERVIE_NAME yohan_gomez@$INSTANCE:/home/yohan_gomez --zone=us-central1-a
+        gcloud compute scp --recurse /home/runner/work/$SERVIE_NAME/$SERVIE_NAME yohan_gomez@$INSTANCE:/home/yohan_gomez --zone=us-central1-a
     - name: Verificar archivos en la instancia de GCE
       run: |
           gcloud compute ssh yohan_gomez@$INSTANCE --zone=us-central1-a --command="ls -la /home/yohan_gomez/$SERVIE_NAME && cat /home/yohan_gomez/$SERVIE_NAME/deploy.sh"
