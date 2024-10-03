@@ -45,6 +45,8 @@ jobs:
         echo "API_KEY=${{ secrets.API_KEY }}" >> ${{ env.ENV_FILE }}
     - name: Create ENV File
       run: cp ${{ env.ENV_FILE }} .env
+    - name: Build tests
+      uses: ./.github/actions/quality
     - name: Deploy 
       run: |
         gcloud compute scp --recurse /home/runner/work/$SERVIE_NAME/$SERVIE_NAME yohan_gomez@$INSTANCE:/home/yohan_gomez --zone=us-central1-a
