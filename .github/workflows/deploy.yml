@@ -69,7 +69,7 @@ jobs:
 
     - name: Deploy 
       run: |
-        gcloud compute scp --recurse /home/runner/work/$SERVIE_NAME/$SERVIE_NAME root@yohan_gomez@$INSTANCE:/home/yohan_gomez --zone=us-central1-a
+        gcloud compute scp --recurse /home/runner/work/$SERVIE_NAME/$SERVIE_NAME root@$INSTANCE:/home/yohan_gomez --zone=us-central1-a
     - name: Verificar archivos en la instancia de GCE
       run: |
           gcloud compute ssh yohan_gomez@$INSTANCE --zone=us-central1-a --command="ls -la /home/yohan_gomez/$SERVIE_NAME && cat /home/yohan_gomez/$SERVIE_NAME/deploy.sh"
