@@ -55,7 +55,7 @@ export const leerArchivoExcel = (archivoBase64: string) => {
 };
 
 export const validarColumnasPlantillaService = (encabezados: string[]) => {
-    const columnasFaltantes = ENCABEZADOS.filter((header: any) => !encabezados.includes(header));
+    const columnasFaltantes = ENCABEZADOS.filter((header: string) => !encabezados.includes(header));
     if (columnasFaltantes.length > 0) {
         throw new Error(`Columnas faltantes en el archivo Excel: ${columnasFaltantes.join(', ')}`);
     }
