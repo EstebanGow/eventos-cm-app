@@ -4,49 +4,80 @@ import axios from 'axios';
 import { ApiClientRest } from '@domain/api';
 import { DEPENDENCY_CONTAINER, TYPES } from '@configuration';
 import { RedisEventosRepository } from '@infrastructure/repositories/redis';
-import { IDireccion, IEvento } from '@application/data';
-import { TOKEN_MAPBOX, URL_MAPBOX } from '@util';
+import { Client } from '@googlemaps/google-maps-services-js';
+import { IEventoOut, ILugaresCercanos } from '@application/data/out/IEventoOut';
+import { IDireccion } from '@application/data';
 
 @injectable()
 export class ApiClient implements ApiClientRest {
     private redisClient = DEPENDENCY_CONTAINER.get<RedisEventosRepository>(TYPES.RedisEventosRepository);
+    private client = new Client({});
+    API_KEY: any;
 
-    async ubicacionesCercanas(evento: IEvento): Promise<any> {
+    async ubicacionesCercanas(evento: IEventoOut): Promise<ILugaresCercanos[]> {
         try {
-            let LugaresCercanos = await this.redisClient.getOne(`ciudad`);
-            if (!LugaresCercanos) {
-                const response = await axios({
-                    method: 'post',
-                    url: `${URL_MAPBOX}${evento.direccion.direccion},${evento.direccion.ciudad}Colombia.json?access_token=${TOKEN_MAPBOX}`,
-                    data: {
-                        codigosCiudades: [
-                            {
-                                codigoCiudad: evento,
-                            },
-                        ],
-                    },
-                });
-                LugaresCercanos = response.data.data[0];
-                this.redisClient.insertOne(LugaresCercanos, `ciudad-`);
+            const claveRedis = `${evento.id}`;
+            let lugaresCercanos = await this.redisClient.getOne(claveRedis);
+            if (!lugaresCercanos) {
+                lugaresCercanos = await this.lugaresCercanosGoogle(evento.direccion.latitud, evento.direccion.longitud);
+                this.redisClient.insertOne(lugaresCercanos, claveRedis);
+                return lugaresCercanos;
             }
-            return { LugaresCercanos };
+            return Object.values(lugaresCercanos);
         } catch (e: any) {
-            throw new Error('Ciudades', e.toString());
+            throw new Error('Ubicaciones cercanas', e.toString());
         }
     }
 
     async obtenerCoordenadas(direccion: IDireccion): Promise<any> {
         try {
-            const direccionUrl = encodeURIComponent(direccion.direccion);
-            const response = await axios({
-                method: 'get',
-                url: `${URL_MAPBOX}${direccionUrl},${direccion.ciudad}Colombia.json?access_token=${TOKEN_MAPBOX}`,
+            const response = await axios.get('https://maps.googleapis.com/maps/api/geocode/json', {
+                params: {
+                    address: direccion.direccion,
+                    key: this.API_KEY,
+                },
             });
-            const data = response.data;
 
-            return { longitude: data['features'][0]['center'][0], latitude: data['features'][0]['center'][1] };
-        } catch (e: any) {
-            throw new Error('Ciudades', e.toString());
+            if (response.data.status === 'OK') {
+                const { lat, lng } = response.data.results[0].geometry.location;
+                return { latitude: lat, longitude: lng };
+            }
+            throw new Error(`Localizacion Fallida. Estado: ${response.data.status}`);
+        } catch (error: any) {
+            console.error('Error obteniendo coordenadas:', error.message);
+            throw error;
+        }
+    }
+
+    async lugaresCercanosGoogle(
+        latitude: any,
+        longitude: any,
+        radius = 1000,
+        type = 'point_of_interest',
+    ): Promise<any> {
+        try {
+            const response = await this.client.placesNearby({
+                params: {
+                    location: { lat: latitude, lng: longitude },
+                    radius: radius,
+                    type: type,
+                    key: this.API_KEY,
+                },
+            });
+
+            const places = response.data.results;
+            const lugaresCercanos: ILugaresCercanos[] = [];
+            places.forEach((lugaresMaps: any) => {
+                const lugar = {
+                    nombre: lugaresMaps.name,
+                    direccion: lugaresMaps.vicinity,
+                    tipo: lugaresMaps.types.join(', '),
+                };
+                lugaresCercanos.push(lugar);
+            });
+            return lugaresCercanos;
+        } catch (error) {
+            console.error('Error al obtener lugares cercanos:', error);
         }
     }
 }

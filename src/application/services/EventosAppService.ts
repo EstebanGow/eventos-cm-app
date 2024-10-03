@@ -3,16 +3,21 @@ import { TYPES, DEPENDENCY_CONTAINER } from '@configuration';
 import { Result, Response } from '@domain/response';
 import { IEventosPostgresRepository, IUsuariosPostgresRepository } from '@domain/repository';
 import { IEditarEvento, IEvento, IUsuarioEvento } from '@application/data';
-import { IEventoId } from '@application/data/out/IEventoId';
 import {
     calcularAsistentes,
     validarCapacidadEvento,
     validarCreacionEvento,
+    validarCreacionEventoImportacion,
     validarEdicionEvento,
     validarPermisosEventoUsuario,
 } from '@domain/services';
 import { ApiClient } from '@infrastructure/api-client';
 import { ApiClientRest } from '@domain/api';
+import { IRespuestaEvento } from '@application/data/out/IRespuestaEvento';
+import { IEventoOut } from '@application/data/out/IEventoOut';
+import { IEventoIdOut } from '@application/data/out/IEventoIdOut';
+import { IMensajeOut } from '@application/data/out/IMensajeOut';
+import { IMetricasOut } from '@application/data/out/IMetricasOut';
 
 @injectable()
 export class EventosAppService {
@@ -24,27 +29,35 @@ export class EventosAppService {
     );
     private apiClient = DEPENDENCY_CONTAINER.get<ApiClientRest>(ApiClient);
 
-    async obtenerEventoService(idEvento: number): Promise<Response<string | null>> {
-        const response = await this.eventosPostgresqlRepository.obtenerEventos(idEvento);
-        return Result.ok(response);
-    }
-
-    async eliminarEventoService(idEvento: number): Promise<Response<any | null>> {
-        const evento = await this.eventosPostgresqlRepository.obtenerEventos(idEvento);
-        if (!evento.length) {
-            return Result.error(`no existe el evento ${idEvento}`);
+    async obtenerEventoService(idEvento: number): Promise<Response<IEventoOut | null>> {
+        const evento = await this.eventosPostgresqlRepository.obtenerEvento(idEvento);
+        if (evento) {
+            const ubicacionesCercanas = await this.apiClient.ubicacionesCercanas(evento);
+            evento.lugaresCercanos = ubicacionesCercanas;
         }
-        const idDireccion = evento[0].direccion.id;
+        return Result.ok(evento);
+    }
+
+    async eliminarEventoService(idEvento: number): Promise<Response<IMensajeOut | null>> {
+        const evento = await this.eventosPostgresqlRepository.obtenerEvento(idEvento);
+        if (!evento) {
+            return Result.error({ mensaje: `no existe el evento ${idEvento}` });
+        }
+        const idDireccion = evento.direccion.id;
         await this.eventosPostgresqlRepository.eliminarEventoTransaccion(idEvento, idDireccion);
-        return Result.ok({ message: 'Evento eliminado correctamente' });
+        return Result.ok({ mensaje: 'Evento eliminado correctamente' });
     }
 
-    async obtenerEventosService(): Promise<Response<any | null>> {
-        const response = await this.eventosPostgresqlRepository.obtenerEventos(null);
-        return Result.ok(response);
+    async obtenerEventosService(): Promise<Response<IEventoOut[] | null>> {
+        const eventos = await this.eventosPostgresqlRepository.obtenerEventos(null);
+        for (const evento of eventos) {
+            const ubicacionesCercanas = await this.apiClient.ubicacionesCercanas(evento);
+            evento.lugaresCercanos = ubicacionesCercanas;
+        }
+        return Result.ok(eventos);
     }
 
-    async guardarEventoService(data: IEvento): Promise<Response<IEventoId | null>> {
+    async guardarEventoService(data: IEvento): Promise<Response<IEventoIdOut | null>> {
         validarCreacionEvento(data);
         const geoReferenciacion = await this.apiClient.obtenerCoordenadas(data.direccion);
         data.direccion.longitud = geoReferenciacion.longitude;
@@ -53,28 +66,40 @@ export class EventosAppService {
         return Result.ok({ idEvento: response });
     }
 
-    async editarEventoService(data: IEditarEvento): Promise<Response<any | null>> {
+    async editarEventoService(data: IEditarEvento): Promise<Response<IEventoIdOut | null>> {
         const evento = await this.eventosPostgresqlRepository.obtenerEventos(data.idEvento);
         validarEdicionEvento(data, evento);
         await this.eventosPostgresqlRepository.editarEventoTransaccion(data);
         return Result.ok({ idEvento: data.idEvento });
     }
 
-    async inscribirUsuarioEventoService(data: IUsuarioEvento): Promise<Response<string | null>> {
+    async inscribirUsuarioEventoService(data: IUsuarioEvento): Promise<Response<IMensajeOut | null>> {
         const usuario = await this.usuariosPostgresqlRepository.obtenerUsuario(data.idUsuario);
         const evento = await this.eventosPostgresqlRepository.obtenerEventos(data.idEvento);
         validarPermisosEventoUsuario(usuario, evento);
         validarCapacidadEvento(evento);
         await this.eventosPostgresqlRepository.inscribirUsuarioEvento(data);
-        return Result.ok();
+        return Result.ok({ mensaje: 'Usuario inscrito al evento de manera exitosa' });
     }
 
-    async obtenerMetricasService(): Promise<Response<any | null>> {
+    async obtenerMetricasService(): Promise<Response<IMetricasOut | null>> {
         const eventos = await this.eventosPostgresqlRepository.obtenerEventos(null);
         const { asistentesPorDia, totalUsuarios } = calcularAsistentes(eventos);
         return Result.ok({
             dias: asistentesPorDia,
             totalUsuarios: totalUsuarios,
         });
+    }
+
+    async guardarEventoImportacionService(data: IEvento): Promise<IRespuestaEvento> {
+        const respuestaValidacion = validarCreacionEventoImportacion(data);
+        if (respuestaValidacion.error) {
+            return respuestaValidacion;
+        }
+        const geoReferenciacion = await this.apiClient.obtenerCoordenadas(data.direccion);
+        data.direccion.longitud = geoReferenciacion.longitude;
+        data.direccion.latitud = geoReferenciacion.latitude;
+        await this.eventosPostgresqlRepository.guardarEventoTransaccion(data);
+        return { error: false };
     }
 }

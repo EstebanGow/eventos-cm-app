@@ -8,3 +8,4 @@ export * from './usuarioIdSchema';
 export * from './autenticarSchema';
 export * from './cargaMasivaSchema';
 export * from './editarEventoSchema';
+export * from './archivoIdSchema';

@@ -1,1 +1,1 @@
-export * from './ExampleEntity';
+export * from './ErrorArchivoEntity';

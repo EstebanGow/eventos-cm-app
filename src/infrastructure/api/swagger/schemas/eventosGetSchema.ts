@@ -27,11 +27,18 @@ export const eventosGetSchema = {
                             direccion: {
                                 id: 10,
                                 pais: 'Colombia',
-                                ciudad: 'Bello',
+                                ciudad: 'Cucuta',
                                 direccion: 'Calle 20E # 73 71',
                             },
                             usuarios: [],
                             usuarios_inscritos: 0,
+                            lugaresCercanos: [
+                                {
+                                    nombre: 'Hotel Faranda Bolívar Cúcuta, a member of Radisson Individuals',
+                                    direccion: 'Avenida Demetrio Mendoza, Puente San Luis',
+                                    tipo: 'lodging, point_of_interest, establishment',
+                                },
+                            ],
                         },
                     ],
                 },

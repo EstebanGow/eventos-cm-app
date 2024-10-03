@@ -13,14 +13,14 @@ export class AutenticacionAppService {
         TYPES.AutenticacionPostgresRepository,
     );
 
-    async autenticarUsuarioService(data: IAuteinticar): Promise<Response<any | null>> {
+    async autenticarUsuarioService(data: IAuteinticar): Promise<Response<string | null>> {
         const usuarioAutenticacion = await this.autenticacionPostgresqlRepository.obtenerUsuarioAutenticacion(
             data.usuario,
         );
         if (!usuarioAutenticacion || !(await bcrypt.compare(data.clave, usuarioAutenticacion.clave))) {
-            return Result.error({ error: 'El usuario no existe' });
+            return Result.error('El usuario no existe');
         }
-        const token = jwt.sign({ id: usuarioAutenticacion.id, nombre: usuarioAutenticacion.nombre }, JWT_SECRET, {
+        const token = jwt.sign({ id: usuarioAutenticacion.id, nombre: usuarioAutenticacion.usuario }, JWT_SECRET, {
             expiresIn: '1h',
         });
         return Result.ok(token);

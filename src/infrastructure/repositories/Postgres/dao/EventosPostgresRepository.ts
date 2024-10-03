@@ -4,6 +4,7 @@ import { IDatabase, IMain, ITask } from 'pg-promise';
 import { ErrorCode, RepositoryException } from '@domain/exceptions';
 import { IEventosPostgresRepository } from '@domain/repository';
 import { IEditarEvento, IEvento, IUsuarioEvento } from '@application/data';
+import { IEventoOut } from '@application/data/out/IEventoOut';
 
 @injectable()
 export class EventosPostgresRepository implements IEventosPostgresRepository {
@@ -17,6 +18,8 @@ export class EventosPostgresRepository implements IEventosPostgresRepository {
                 return idEvento;
             });
         } catch ({ message, statusCode, code, cause }: any) {
+            console.error(message);
+            console.error(cause);
             throw new RepositoryException(message as string, statusCode as number, code as ErrorCode, cause as string);
         }
     }
@@ -32,64 +35,20 @@ export class EventosPostgresRepository implements IEventosPostgresRepository {
         }
     }
 
-    async obtenerEventos(idEvento: number | null): Promise<any> {
+    async obtenerEvento(idEvento: number | null): Promise<IEventoOut> {
         try {
-            const complementoQuery = idEvento ? `WHERE e.id = ${idEvento}` : ``;
-            const query = `SELECT 
-                            e.id,
-                            e.nombre,
-                            e.fecha::text,
-                            e.hora_inicio,
-                            e.hora_fin, 
-                            e.descripcion, 
-                            e.capacidad, 
-                            e.precio, 
-                            json_build_object(
-                                'id', te.id,
-                                'descripcion', te.descripcion
-                            ) as tipo_evento,
-                            json_build_object(
-                                'id', d.id,
-                                'pais', d.pais,
-                                'ciudad', d.ciudad,
-                                'direccion', d.direccion,
-                                'longitud', d.longitud,
-                                'latitud', d.latitud
-                            ) as direccion,
-                            CASE WHEN COUNT(u.id) > 0 THEN
-                            json_agg(jsonb_build_object(
-                                'nombres', u.nombres,
-                                'apellidos', u.apellidos,
-                                'identificacion', u.identificacion,
-                                'telefono', u.telefono
-                            )) ELSE '[]'
-                            END
-                            as usuarios,
-                            COUNT(u.id)::int as usuarios_inscritos
-                        FROM eventos e
-                        JOIN direcciones d on e.id_direccion = d.id
-                        JOIN tipos_evento te on e.tipo_evento = te.id
-                        LEFT JOIN usuarios_eventos ue on ue.id_evento = e.id
-                        LEFT JOIN usuarios u on ue.id_usuario = u.id
-                        ${complementoQuery}
-                        GROUP BY e.id,
-                            e.nombre,
-                            e.fecha,
-                            e.fecha,
-                            e.hora_inicio,
-                            e.hora_fin, 
-                            e.descripcion, 
-                            e.capacidad, 
-                            e.precio, 
-                            d.pais, 
-                            d.id, 
-                            d.ciudad, 
-                            d.direccion, 
-                            d.longitud,
-                            d.latitud,
-                            te.id, 
-                            te.descripcion;`;
-            const response = await this.db.manyOrNone(query);
+            const query = this.obtenerQueryEventos(idEvento);
+            const response = (await this.db.oneOrNone(query)) as IEventoOut;
+            return response;
+        } catch ({ message, statusCode, code, cause }: any) {
+            throw new RepositoryException(message as string, statusCode as number, code as ErrorCode, cause as string);
+        }
+    }
+
+    async obtenerEventos(idEvento: number | null): Promise<IEventoOut[]> {
+        try {
+            const query = this.obtenerQueryEventos(idEvento);
+            const response = (await this.db.manyOrNone(query)) as IEventoOut[];
             return response;
         } catch ({ message, statusCode, code, cause }: any) {
             throw new RepositoryException(message as string, statusCode as number, code as ErrorCode, cause as string);
@@ -233,5 +192,64 @@ export class EventosPostgresRepository implements IEventosPostgresRepository {
         } catch ({ message, statusCode, code, cause }: any) {
             throw new RepositoryException(message as string, statusCode as number, code as ErrorCode, cause as string);
         }
+    }
+
+    private obtenerQueryEventos(idEvento: number | null): string {
+        const complementoQuery = idEvento ? `WHERE e.id = ${idEvento}` : ``;
+        const query = `SELECT 
+                            e.id,
+                            e.nombre,
+                            e.fecha::text,
+                            e.hora_inicio,
+                            e.hora_fin, 
+                            e.descripcion, 
+                            e.capacidad, 
+                            e.precio, 
+                            json_build_object(
+                                'id', te.id,
+                                'descripcion', te.descripcion
+                            ) as tipo_evento,
+                            json_build_object(
+                                'id', d.id,
+                                'pais', d.pais,
+                                'ciudad', d.ciudad,
+                                'direccion', d.direccion,
+                                'longitud', d.longitud,
+                                'latitud', d.latitud
+                            ) as direccion,
+                            CASE WHEN COUNT(u.id) > 0 THEN
+                            json_agg(jsonb_build_object(
+                                'nombres', u.nombres,
+                                'apellidos', u.apellidos,
+                                'identificacion', u.identificacion,
+                                'telefono', u.telefono
+                            )) ELSE '[]'
+                            END
+                            as usuarios,
+                            COUNT(u.id)::int as usuarios_inscritos
+                        FROM eventos e
+                        JOIN direcciones d on e.id_direccion = d.id
+                        JOIN tipos_evento te on e.tipo_evento = te.id
+                        LEFT JOIN usuarios_eventos ue on ue.id_evento = e.id
+                        LEFT JOIN usuarios u on ue.id_usuario = u.id
+                        ${complementoQuery}
+                        GROUP BY e.id,
+                            e.nombre,
+                            e.fecha,
+                            e.fecha,
+                            e.hora_inicio,
+                            e.hora_fin, 
+                            e.descripcion, 
+                            e.capacidad, 
+                            e.precio, 
+                            d.pais, 
+                            d.id, 
+                            d.ciudad, 
+                            d.direccion, 
+                            d.longitud,
+                            d.latitud,
+                            te.id, 
+                            te.descripcion;`;
+        return query;
     }
 }

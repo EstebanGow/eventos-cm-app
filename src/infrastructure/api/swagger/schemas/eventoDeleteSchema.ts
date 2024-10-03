@@ -8,7 +8,7 @@ export const eventoDeleteSchema = {
     schema: {
         description: 'Eliminar un Evento',
         tags: [SwaggerTag.Eventos],
-        body: validationParser(eventoIdSchema),
+        params: validationParser(eventoIdSchema),
         response: {
             '200': beauty(
                 {

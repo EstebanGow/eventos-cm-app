@@ -49,8 +49,10 @@ jobs:
         echo "PORT_DB=${{ secrets.POSTGRES_PORT }}" >> ${{ env.ENV_FILE }}
         echo "REDIS_HOST=${{ secrets.REDIS_HOST }}" >> ${{ env.ENV_FILE }} 
         echo "REDIS_PORT=${{ secrets.REDIS_PORT }}" >> ${{ env.ENV_FILE }}
+        echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> ${{ env.ENV_FILE }}
+        echo "API_KEY=${{ secrets.API_KEY }}" >> ${{ env.ENV_FILE }}
     - name: Create ENV File
-      run: touch .env && cp ${{ env.ENV_FILE }} .env
+      run: touch .env && echo ${{ env.ENV_FILE }} >> .env
     - name: Ejecutar depliegue
       run: |
           gcloud compute ssh yohan_gomez@$INSTANCE --zone=us-central1-a --command="cd /home/yohan_gomez/$SERVIE_NAME/ && chmod +x deploy.sh && POSTGRES_PASSWORD=$POSTGRES_PASSWORD ./deploy.sh"

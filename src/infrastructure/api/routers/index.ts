@@ -14,17 +14,31 @@ import {
     obtenerUsuarioRouter,
     obtenerUsuariosRouter,
 } from './UsuariosRouter';
-import { obtenerPlantillaRouter, procesarArchivoRouter } from './PlantillasRouter';
+import {
+    cargarArchivoRouter,
+    obtenerEstadoCargaEventosRouter,
+    obtenerPlantillaRouter,
+    procesarArchivoRouter,
+} from './PlantillasRouter';
 import {
     eventoGetSchema,
     eventosGetSchema,
     eventosPostSchema,
     eventosPutSchema,
     metricasEventosGetSchema,
+    plantillaCargarPostSchema,
+    plantillaGetSchema,
+    plantillaProcesoGetSchema,
+    usuarioDeleteSchema,
     usuarioEventoPostSchema,
+    usuarioGetSchema,
+    usuariosGetSchema,
+    usuariosPostSchema,
 } from '../swagger';
 import { eventoDeleteSchema } from '../swagger/schemas/eventoDeleteSchema';
 import { autenticarUsuarioRouter, verificarTokenRouter } from './AutenticacionRouter';
+import { subscriber } from '@infrastructure/repositories';
+import { IEventoImportacion } from '@application/data';
 
 export const initRoutes = async (application: FastifyInstance): Promise<void> => {
     application.get('/evento/:id', eventoGetSchema, obtenerEventoRouter);
@@ -35,15 +49,20 @@ export const initRoutes = async (application: FastifyInstance): Promise<void> =>
     application.delete('/evento/eliminar/:id', eventoDeleteSchema, eliminarEventoRouter);
     application.get('/eventos/metricas', metricasEventosGetSchema, obtenerMetricasRouter);
 
-    application.post('/usuarios/usuario', crearUsuarioRouter);
-    application.get('/usuarios/usuario/:id', obtenerUsuarioRouter);
-    application.get('/usuarios/usuarios', obtenerUsuariosRouter);
-    application.delete('/usuarios/eliminar/:id', eliminarUsuarioRouter);
+    application.post('/usuarios/usuario', usuariosPostSchema, crearUsuarioRouter);
+    application.get('/usuarios/usuario/:id', usuarioGetSchema, obtenerUsuarioRouter);
+    application.get('/usuarios/usuarios', usuariosGetSchema, obtenerUsuariosRouter);
+    application.delete('/usuarios/eliminar/:id', usuarioDeleteSchema, eliminarUsuarioRouter);
 
-    application.get('/plantilla', obtenerPlantillaRouter);
-    application.post('/plantilla/carga', procesarArchivoRouter);
+    application.get('/plantilla', plantillaGetSchema, obtenerPlantillaRouter);
+    application.get(
+        '/plantilla/obtener-estado-proceso/:id',
+        plantillaProcesoGetSchema,
+        obtenerEstadoCargaEventosRouter,
+    );
+    application.post('/plantilla/carga', plantillaCargarPostSchema, cargarArchivoRouter);
+
     application.post('/autenticar', autenticarUsuarioRouter);
-
     application.addHook('onRequest', async (request, reply) => {
         if (
             request.routerPath !== '/eventos-cm-app/autenticar' &&
@@ -53,3 +72,7 @@ export const initRoutes = async (application: FastifyInstance): Promise<void> =>
         }
     });
 };
+
+subscriber.notifications.on('events', async (data: IEventoImportacion) => {
+    await procesarArchivoRouter(data);
+});

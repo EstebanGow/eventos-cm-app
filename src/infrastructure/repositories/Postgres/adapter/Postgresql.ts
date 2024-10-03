@@ -4,6 +4,7 @@ import pgPromise, { IMain, IDatabase } from 'pg-promise';
 import { NODE_ENV } from '@util';
 import { IConnectionParameters, IDataBase, IEnvironments } from '../models';
 import { CM_CONECTION_PARAMETERS } from '.';
+import createSubscriber from 'pg-listen';
 
 const getConnectionParameters = (db: string): IConnectionParameters => {
     const DATABASES: IEnvironments<IConnectionParameters> = {
@@ -22,3 +23,8 @@ const getConnectionParameters = (db: string): IConnectionParameters => {
 
 export const pgCm: IMain = pgPromise();
 export const db = pgCm(getConnectionParameters('db')) as IDatabase<IMain>;
+export const subscriber = createSubscriber({
+    connectionString: `postgres://${process.env.USER_DB}:${process.env.PASSWORD_DB}@${process.env.POSTGRES_HOST}:5432/${process.env.DB_NAME}`,
+});
+subscriber.connect();
+subscriber.listenTo('events');

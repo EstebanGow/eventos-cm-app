@@ -3,4 +3,5 @@ import Joi from 'joi';
 
 export const cargaMasivaSchema = Joi.object<ICargaMasiva>({
     archivo: Joi.string().required(),
+    nombre: Joi.string().required(),
 });

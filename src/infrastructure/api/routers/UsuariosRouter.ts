@@ -7,16 +7,16 @@ import { IUsuario } from '@application/data/in/IUsuario';
 import { IUsuarioId } from '@application/data';
 
 export const crearUsuarioRouter = async (req: FastifyRequest, reply: FastifyReply): Promise<FastifyReply | void> => {
-    const eventosAppService = DEPENDENCY_CONTAINER.get(UsuariosAppService);
+    const usuariosAppService = DEPENDENCY_CONTAINER.get(UsuariosAppService);
     const data = validateData<IUsuario>(usuarioSchema, req.body);
-    const response = await eventosAppService.crearUsuarioService(data);
+    const response = await usuariosAppService.crearUsuarioService(data);
     return reply.send({ ...response });
 };
 
 export const obtenerUsuarioRouter = async (req: FastifyRequest, reply: FastifyReply): Promise<FastifyReply | void> => {
-    const eventosAppService = DEPENDENCY_CONTAINER.get(UsuariosAppService);
+    const usuariosAppService = DEPENDENCY_CONTAINER.get(UsuariosAppService);
     const { id } = validateData<IUsuarioId>(usuarioIdSchema, req.params);
-    const response = await eventosAppService.obtenerUsuarioService(id);
+    const response = await usuariosAppService.obtenerUsuarioService(id);
     return reply.send({ ...response });
 };
 
@@ -24,14 +24,14 @@ export const obtenerUsuariosRouter = async (
     _req: FastifyRequest,
     reply: FastifyReply,
 ): Promise<FastifyReply | void> => {
-    const eventosAppService = DEPENDENCY_CONTAINER.get(UsuariosAppService);
-    const response = await eventosAppService.obtenerUsuariosService();
+    const usuariosAppService = DEPENDENCY_CONTAINER.get(UsuariosAppService);
+    const response = await usuariosAppService.obtenerUsuariosService();
     return reply.send({ ...response });
 };
 
 export const eliminarUsuarioRouter = async (req: FastifyRequest, reply: FastifyReply): Promise<FastifyReply | void> => {
-    const eventosAppService = DEPENDENCY_CONTAINER.get(UsuariosAppService);
+    const usuariosAppService = DEPENDENCY_CONTAINER.get(UsuariosAppService);
     const { id } = validateData<IUsuarioId>(usuarioIdSchema, req.params);
-    const response = await eventosAppService.eliminarUsuarioService(id);
+    const response = await usuariosAppService.eliminarUsuarioService(id);
     return reply.send({ ...response });
 };

@@ -6,3 +6,5 @@ export * from './IUsuario';
 export * from './IUsuarioId';
 export * from './IAuteinticar';
 export * from './ICargaMasiva';
+export * from './IEventoImportacion';
+export * from './IArchivoId';

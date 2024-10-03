@@ -4,12 +4,14 @@ import { TYPES } from '@configuration';
 import {
     IAutenticacionIPostgresRepository,
     IEventosPostgresRepository,
+    IPlantillasPostgresRepository,
     IUsuariosPostgresRepository,
     RedisRepository,
 } from '@domain/repository';
 import {
     AutenticacionPostgresRepository,
     EventosPostgresRepository,
+    PlantillasPostgresRepository,
     UsuariosPostgresRepository,
     db,
 } from '@infrastructure/repositories/Postgres';
@@ -29,6 +31,9 @@ export const createDependencyContainer = (): void => {
     DEPENDENCY_CONTAINER.bind(TYPES.RedisClient).toConstantValue(redisClient);
     DEPENDENCY_CONTAINER.bind<IEventosPostgresRepository>(TYPES.EventosPostgresRepository)
         .to(EventosPostgresRepository)
+        .inSingletonScope();
+    DEPENDENCY_CONTAINER.bind<IPlantillasPostgresRepository>(TYPES.PlantillasPostgresRepository)
+        .to(PlantillasPostgresRepository)
         .inSingletonScope();
     DEPENDENCY_CONTAINER.bind<IUsuariosPostgresRepository>(TYPES.UsuariosPostgresRepository)
         .to(UsuariosPostgresRepository)

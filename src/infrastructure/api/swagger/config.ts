@@ -6,8 +6,8 @@ export const swagger_config: FastifyDynamicSwaggerOptions = {
     routePrefix: `${PREFIX}/docs`,
     swagger: {
         info: {
-            title: 'Microservice Template',
-            description: 'Este microservicio se encarga de guardar la configuración inicial Firestore',
+            title: 'eventos-cm-app',
+            description: 'Microservicio para gestionar usuarios y eventos',
             version: '0.1.0',
             contact: {
                 name: 'Coordinadora Mercantil S.A',

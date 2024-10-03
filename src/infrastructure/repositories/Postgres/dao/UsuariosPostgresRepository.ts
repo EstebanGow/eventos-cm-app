@@ -4,6 +4,7 @@ import { IDatabase, IMain } from 'pg-promise';
 import { ErrorCode, RepositoryException } from '@domain/exceptions';
 import { IUsuariosPostgresRepository } from '@domain/repository';
 import { IUsuario } from '@application/data';
+import { UsuarioModel } from '@domain/model';
 
 @injectable()
 export class UsuariosPostgresRepository implements IUsuariosPostgresRepository {
@@ -27,18 +28,20 @@ export class UsuariosPostgresRepository implements IUsuariosPostgresRepository {
         }
     }
 
-    async obtenerUsuario(idUsuario: number | null): Promise<any> {
+    async obtenerUsuarios(idUsuario: number | null): Promise<UsuarioModel[]> {
         try {
-            const complementoQuery = idUsuario ? `WHERE u.id = ${idUsuario}` : ``;
-            const query = `SELECT u.id, u.nombres, u.apellidos, u.identificacion, u.telefono, u.tipo_usuario,
-                            json_build_object(
-                                'id', tu.id,
-                                'descripcion', tu.descripcion
-                            ) as tipo_usuario
-                        FROM public.usuarios u
-                        JOIN tipos_usuario tu on u.tipo_usuario = tu.id
-                        ${complementoQuery}`;
+            const query = this.obtenerQueryUsuarios(idUsuario);
             const response = await this.db.manyOrNone(query);
+            return response;
+        } catch ({ message, statusCode, code, cause }: any) {
+            throw new RepositoryException(message as string, statusCode as number, code as ErrorCode, cause as string);
+        }
+    }
+
+    async obtenerUsuario(idUsuario: number | null): Promise<UsuarioModel> {
+        try {
+            const query = this.obtenerQueryUsuarios(idUsuario);
+            const response = await this.db.oneOrNone(query);
             return response;
         } catch ({ message, statusCode, code, cause }: any) {
             throw new RepositoryException(message as string, statusCode as number, code as ErrorCode, cause as string);
@@ -47,10 +50,24 @@ export class UsuariosPostgresRepository implements IUsuariosPostgresRepository {
 
     async eliminarUsuario(idUsuario: number): Promise<void> {
         try {
+            console.log(idUsuario);
             const query = `DELETE FROM usuarios WHERE id = $1`;
             await this.db.none(query, [idUsuario]);
         } catch ({ message, statusCode, code, cause }: any) {
             throw new RepositoryException(message as string, statusCode as number, code as ErrorCode, cause as string);
         }
+    }
+
+    private obtenerQueryUsuarios(idUsuario: number | null): string {
+        const complementoQuery = idUsuario ? `WHERE u.id = ${idUsuario}` : ``;
+        const query = `SELECT u.id, u.nombres, u.apellidos, u.identificacion, u.telefono, u.tipo_usuario,
+                            json_build_object(
+                                'id', tu.id,
+                                'descripcion', tu.descripcion
+                            ) as tipo_usuario
+                        FROM public.usuarios u
+                        JOIN tipos_usuario tu on u.tipo_usuario = tu.id
+                        ${complementoQuery}`;
+        return query;
     }
 }

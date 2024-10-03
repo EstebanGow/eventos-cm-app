@@ -1,6 +1,11 @@
 import { IEditarEvento, IEvento } from '@application/data';
 import { TiposEvento, TiposUsuaario } from '@domain/enum';
-import { BadMessageException } from '@domain/exceptions';
+import {
+    BadMessageException,
+    ERROR_ASOCIAR_EVENTO_USUARIO,
+    ERROR_CREACION_EVENTO,
+    ERROR_EDICION_EVENTO,
+} from '@domain/exceptions';
 import moment from 'moment-timezone';
 
 export const validarPermisosEventoUsuario = (usuario: any, evento: any) => {
@@ -10,7 +15,7 @@ export const validarPermisosEventoUsuario = (usuario: any, evento: any) => {
     const existeUsuario = evento[0].usuarios.filter((u: any) => u.identificacion === usuario[0].identificacion);
     if (existeUsuario.length) {
         throw new BadMessageException(
-            'Error asociar usuario evento',
+            ERROR_ASOCIAR_EVENTO_USUARIO,
             `El usuario ${usuario[0].identificacion} ya se encuentra registrado al evento ${evento[0].nombre}`,
         );
     }
@@ -18,7 +23,7 @@ export const validarPermisosEventoUsuario = (usuario: any, evento: any) => {
     if (evento[0].tipo_evento.id === TiposEvento.VIP) {
         if (usuario[0].tipo_usuario.id !== TiposUsuaario.VIP) {
             throw new BadMessageException(
-                'Error asociar usuario evento',
+                ERROR_ASOCIAR_EVENTO_USUARIO,
                 `El usuario no tiene permisos para asistir al evento VIP`,
             );
         }
@@ -30,7 +35,7 @@ export const validarCapacidadEvento = (evento: any) => {
         return true;
     }
     throw new BadMessageException(
-        'Error asociar usuario evento',
+        ERROR_ASOCIAR_EVENTO_USUARIO,
         `El evento no tiene capacidad, total asistentes: ${evento[0].capacidad}`,
     );
 };
@@ -40,10 +45,19 @@ export const validarCreacionEvento = (evento: IEvento) => {
     const fechaEvento = moment(`${evento.fecha} ${evento.horaInicio}`).format('YYYY-MM-DD HH:mm');
     if (fechaActual > fechaEvento) {
         throw new BadMessageException(
-            'Error creacion evento',
+            ERROR_CREACION_EVENTO,
             `la fecha del evento no puede ser menor a la fecha actual`,
         );
     }
+};
+
+export const validarCreacionEventoImportacion = (evento: IEvento) => {
+    const fechaActual = moment().tz('America/Bogota').format('YYYY-MM-DD HH:mm');
+    const fechaEvento = moment(`${evento.fecha} ${evento.horaInicio}`).format('YYYY-MM-DD HH:mm');
+    if (fechaActual > fechaEvento) {
+        return { error: true, mensaje: 'la fecha del evento no puede ser menor a la fecha actual' };
+    }
+    return { error: false };
 };
 
 export const validarEdicionEvento = (eventoEditar: IEditarEvento, evento: any) => {
@@ -55,10 +69,7 @@ export const validarEdicionEvento = (eventoEditar: IEditarEvento, evento: any) =
         throw new BadMessageException('Error edicion evento', `No se puede editar un evento que ya paso`);
     }
     if (fechaActual > nuevaFechaEvento) {
-        throw new BadMessageException(
-            'Error edicion evento',
-            `la fecha del evento no puede ser menor a la fecha actual`,
-        );
+        throw new BadMessageException(ERROR_EDICION_EVENTO, `la fecha del evento no puede ser menor a la fecha actual`);
     }
 };
 

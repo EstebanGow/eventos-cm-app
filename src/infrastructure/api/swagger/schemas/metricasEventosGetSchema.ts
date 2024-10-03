@@ -4,7 +4,7 @@ import { SwaggerTag } from '@domain/enum';
 export const metricasEventosGetSchema = {
     $id: uuidv4(),
     schema: {
-        description: 'consultar todos los eventos',
+        description: 'consultar metricas eventos',
         tags: [SwaggerTag.Eventos],
         response: {
             '200': beauty(
