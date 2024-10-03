@@ -12,7 +12,7 @@ import { IPlantillasPostgresRepository } from '@domain/repository';
 import { EventosAppService } from './EventosAppService';
 import moment from 'moment';
 import { ErrorArchivoEntity } from '@domain/entities';
-import { SERVICE_NAME } from 'util/Envs';
+import { SERVICE_NAME } from '@util';
 
 @injectable()
 export class PlantillasAppService {
