@@ -18,7 +18,7 @@
     "dev": "tsc-watch -p tsconfig.build.json --onSuccess \"node dist/infrastructure/api/Server.js\"",
     "start": "node dist/infrastructure/api/Server.js",
     "start:debug": "tsc-watch -p tsconfig.build.json --onSuccess \"node --inspect-brk dist/infrastructure/api/Server.js\"",
-    "test": "jest --color --verbose --no-cache",
+    "test": "jest --forceExit --color --verbose --no-cache",
     "coverage": "jest --coverage",
     "husky:install": "husky install"
   },
