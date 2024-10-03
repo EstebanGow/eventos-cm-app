@@ -12,6 +12,7 @@ import { IPlantillasPostgresRepository } from '@domain/repository';
 import { EventosAppService } from './EventosAppService';
 import moment from 'moment';
 import { ErrorArchivoEntity } from '@domain/entities';
+import { SERVICE_NAME } from 'util/Envs';
 
 @injectable()
 export class PlantillasAppService {
@@ -109,7 +110,7 @@ export class PlantillasAppService {
 
     private obtnerPlantilla(fileName: string): string {
         try {
-            const file = fs.readFileSync(`/Users/usuario/Proyectos/eventos-cm-app/archivos/${fileName}`);
+            const file = fs.readFileSync(`/${SERVICE_NAME}/archivos/${fileName}`);
             return file.toString('base64');
         } catch (error) {
             throw new Error('Error generando el archivo');
@@ -133,7 +134,7 @@ export class PlantillasAppService {
     private guardarExcelDesdeBase64(data: ICargaMasiva) {
         try {
             const buffer = Buffer.from(data.archivo, 'base64');
-            const rutaCompleta = path.join(`/Users/usuario/Proyectos/eventos-cm-app/archivos/`, data.nombre);
+            const rutaCompleta = path.join(`/${SERVICE_NAME}/archivos/`, data.nombre);
             fs.writeFile(rutaCompleta, buffer, (err) => {
                 if (err) {
                     console.error('Error al guardar el archivo:', err);
