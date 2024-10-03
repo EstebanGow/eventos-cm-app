@@ -38,7 +38,7 @@ jobs:
         echo "PASSWORD_DB=${{ secrets.POSTGRES_PASSWORD }}" >> ${{ env.ENV_FILE }}
         echo "DB_NAME=${{ secrets.DB_NAME }}" >> ${{ env.ENV_FILE }}
         echo "POSTGRES_PORT=${{ secrets.POSTGRES_PORT }}" >> ${{ env.ENV_FILE }}
-         echo "POSTGRES_HOST=${{ secrets.POSTGRES_HOST }}" >> ${{ env.ENV_FILE }}
+        echo "POSTGRES_HOST=${{ secrets.POSTGRES_HOST }}" >> ${{ env.ENV_FILE }}
         echo "REDIS_HOST=${{ secrets.REDIS_HOST }}" >> ${{ env.ENV_FILE }} 
         echo "REDIS_PORT=${{ secrets.REDIS_PORT }}" >> ${{ env.ENV_FILE }}
         echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> ${{ env.ENV_FILE }}
