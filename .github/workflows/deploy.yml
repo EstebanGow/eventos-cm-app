@@ -49,7 +49,7 @@ jobs:
         echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> ${{ env.ENV_FILE }}
         echo "API_KEY=${{ secrets.API_KEY }}" >> ${{ env.ENV_FILE }}
     - name: Create ENV File
-      run: cp ${{ env.ENV_FILE }} >> /home/yohan_gomez/$SERVIE_NAME/.env
+      run: pwd
     - name: Ejecutar depliegue
       run: |
           gcloud compute ssh yohan_gomez@$INSTANCE --zone=us-central1-a --command="cd /home/yohan_gomez/$SERVIE_NAME/ && chmod +x deploy.sh && POSTGRES_PASSWORD=$POSTGRES_PASSWORD ./deploy.sh"
