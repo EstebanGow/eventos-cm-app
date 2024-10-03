@@ -5,7 +5,7 @@ on:
     branches:
       - main 
 env:
-    SERVIE_NAME: eventos-cm-ms
+    SERVIE_NAME: ${{ github.event.repository.name }}
     PROJECT_ID: ${{ secrets.PROJECT_ID }}
     INSTANCE: ${{ secrets.INSTANCE }}
     ENV_FILE: env/main.env
