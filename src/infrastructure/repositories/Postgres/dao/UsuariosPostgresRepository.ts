@@ -50,7 +50,6 @@ export class UsuariosPostgresRepository implements IUsuariosPostgresRepository {
 
     async eliminarUsuario(idUsuario: number): Promise<void> {
         try {
-            console.log(idUsuario);
             const query = `DELETE FROM usuarios WHERE id = $1`;
             await this.db.none(query, [idUsuario]);
         } catch ({ message, statusCode, code, cause }: any) {

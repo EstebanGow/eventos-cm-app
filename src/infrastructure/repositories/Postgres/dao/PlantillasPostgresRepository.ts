@@ -1,10 +1,11 @@
 import { injectable } from 'inversify';
 import { DEPENDENCY_CONTAINER, TYPES } from '@configuration';
 import { IDatabase, IMain, ITask } from 'pg-promise';
-import { ErrorCode, RepositoryException } from '@domain/exceptions';
+import { PostgresException } from '@domain/exceptions';
 import moment from 'moment-timezone';
 import { IPlantillasPostgresRepository } from '@domain/repository';
 import { ErrorArchivoEntity } from '@domain/entities';
+import { EstadoProcesoModel } from '@domain/model';
 @injectable()
 export class PlantillasPostgresRepository implements IPlantillasPostgresRepository {
     private db = DEPENDENCY_CONTAINER.get<IDatabase<IMain>>(TYPES.db);
@@ -17,7 +18,7 @@ export class PlantillasPostgresRepository implements IPlantillasPostgresReposito
                     VALUES($1, $2, $3, 1, 0, 0);`;
             await this.db.none(query, [nombreArchivo, fechaActual, totalRegistros]);
         } catch ({ message, statusCode, code, cause }: any) {
-            throw new RepositoryException(message as string, statusCode as number, code as ErrorCode, cause as string);
+            throw new PostgresException(message as string, code as string | number, '');
         }
     }
 
@@ -30,7 +31,7 @@ export class PlantillasPostgresRepository implements IPlantillasPostgresReposito
         } catch ({ message, statusCode, code, cause }: any) {
             console.error(message);
             console.error(cause);
-            throw new RepositoryException(message as string, statusCode as number, code as ErrorCode, cause as string);
+            throw new PostgresException(message as string, code as string | number, '');
         }
     }
     async actulizarRegistroArchivoExitoso(idArchivo: number): Promise<void> {
@@ -55,11 +56,11 @@ export class PlantillasPostgresRepository implements IPlantillasPostgresReposito
                     VALUES($1, $2, $3, $4);`;
             await t.none(query, [data.idArchivo, data.contenido, fechaActual, data.descripcionError]);
         } catch ({ message, statusCode, code, cause }: any) {
-            throw new RepositoryException(message as string, statusCode as number, code as ErrorCode, cause as string);
+            throw new PostgresException(message as string, code as string | number, '');
         }
     }
 
-    async obtenerEstadoCargaEventos(idArchivo: number): Promise<any> {
+    async obtenerEstadoCargaEventos(idArchivo: number): Promise<EstadoProcesoModel | null> {
         try {
             const query = `SELECT ie.id, 
                                 ie.nombre_archivo,  
@@ -86,7 +87,7 @@ export class PlantillasPostgresRepository implements IPlantillasPostgresReposito
             const response = await this.db.oneOrNone(query, [idArchivo]);
             return response;
         } catch ({ message, statusCode, code, cause }: any) {
-            throw new RepositoryException(message as string, statusCode as number, code as ErrorCode, cause as string);
+            throw new PostgresException(message as string, code as string | number, '');
         }
     }
 }

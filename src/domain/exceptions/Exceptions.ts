@@ -1,4 +1,4 @@
-import { ErrorCode, StatusCode } from './ErrorCode';
+import { ErrorCode, PostgresErrorCode, StatusCode } from './ErrorCode';
 
 export abstract class Exception {
     isError: boolean;
@@ -27,7 +27,11 @@ export class ApiRestException extends Exception {
     }
 }
 
-
+export class NotFoundException extends Exception {
+    constructor(cause: string, message: string) {
+        super(message, ErrorCode.REPOSITORY_ERROR, StatusCode.NOT_FOUND, cause);
+    }
+}
 
 export class RepositoryException extends Exception {
     constructor(
@@ -43,6 +47,51 @@ export class RepositoryException extends Exception {
 export class PubSubException extends Exception {
     constructor(message: string, cause: string) {
         super(message, ErrorCode.PUBSUB_ERROR, StatusCode.INTERNAL_ERROR, cause);
+    }
+}
+
+export class PostgresException extends Exception {
+    constructor(cause: string, code: number | string, stack: string) {
+        let message = 'Postgres Error:';
+        switch (code) {
+            case 'P0001':
+                message += 'Error de servidor ' + stack;
+                break;
+            case '23505':
+                message += 'Intentando insertar llave única duplicada - ' + stack;
+                break;
+            case '23514':
+                message += 'Acción viola una restricción de la tabla - ' + stack;
+                break;
+            case '23502':
+                message += 'Insertando una llave nula que no puede serlo - ' + stack;
+                break;
+            case '42883':
+                message += 'llamado a funcion Inexistente - ' + stack;
+                break;
+            case '42P01':
+                message += 'llamado a tabla Inexistente - ' + stack;
+                break;
+            case '42P02':
+                message += 'llamado a parametro Inexistente - ' + stack;
+                break;
+            case '42704':
+                message += 'llamado a objeto Inexistente - ' + stack;
+                break;
+            case '42703':
+                message += 'llamado a columna Inexistente - ' + stack;
+                break;
+            case '57014':
+                message += 'Consulta cancelada - ' + stack;
+                break;
+            case 'ECONNREFUSED':
+                message += 'Error de conexión - ' + stack;
+                break;
+            default:
+                message += PostgresErrorCode.RETRY;
+                break;
+        }
+        super(message, ErrorCode.UNKNOWN_ERROR, StatusCode.INTERNAL_ERROR, cause);
     }
 }
 
