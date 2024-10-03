@@ -9,7 +9,7 @@ import { FilaEventoModel } from '@domain/model';
 
 export const obtnerPlantilla = (fileName: string) => {
     try {
-        const file = fs.readFileSync(`/Users/usuario/Proyectos/${SERVICE_NAME}/archivos/${fileName}`);
+        const file = fs.readFileSync(`/${SERVICE_NAME}/archivos/${fileName}`);
         return file.toString('base64');
     } catch (error) {
         throw new Error('Error generando el archivo');
@@ -33,7 +33,7 @@ export const formatearArchivo = (data: any[]) => {
 export const guardarExcelDesdeBase64 = (data: ICargaMasiva) => {
     try {
         const buffer = Buffer.from(data.archivo, 'base64');
-        const rutaCompleta = path.join(`/Users/usuario/Proyectos/${SERVICE_NAME}/archivos/`, data.nombre);
+        const rutaCompleta = path.join(`/${SERVICE_NAME}/archivos/`, data.nombre);
         fs.writeFile(rutaCompleta, buffer, (err) => {
             if (err) {
                 console.error('Error al guardar el archivo:', err);
@@ -44,6 +44,14 @@ export const guardarExcelDesdeBase64 = (data: ICargaMasiva) => {
     } catch (error) {
         throw new Error(`Error al guardar el archivo: ${error}`);
     }
+};
+
+export const eliminarPlantilla = (nombreArchivo: string) => {
+    fs.unlink(`/${SERVICE_NAME}/archivos/${nombreArchivo}`, function (err) {
+        if (err) throw err;
+        // if no error, file has been deleted successfully
+        console.log('File deleted!');
+    });
 };
 
 export const leerArchivoExcel = (archivoBase64: string) => {

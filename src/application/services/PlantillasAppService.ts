@@ -8,6 +8,7 @@ import { IPlantillasPostgresRepository } from '@domain/repository';
 import { EventosAppService } from './EventosAppService';
 import { ErrorArchivoEntity } from '@domain/entities';
 import {
+    eliminarPlantilla,
     formatearArchivo,
     guardarExcelDesdeBase64,
     leerArchivoExcel,
@@ -47,6 +48,7 @@ export class PlantillasAppService {
         await this.postgresqlRepository.actulizarEstadoArchivo(data.data.id, EstadoProcesoArchivo.PROCESANDO);
         await this.procesarArchivo(eventosFormateados, data);
         await this.postgresqlRepository.actulizarEstadoArchivo(data.data.id, EstadoProcesoArchivo.FINALIZADO);
+        eliminarPlantilla(data.data.nombre_archivo);
         return Result.ok('Archivo procesado exitosamente.');
     }
 

@@ -14,37 +14,6 @@ Servicio para la creación de eventos, usuarios e inscripción de usuarios a eve
 ```
 ├── @types
 │   └── (modulos que no tienen types)
-├── dist
-│   ├── application
-│   │   ├── data
-│   │   ├── services
-│   │   └── util
-│   ├── configuration
-│   ├── domain
-|   |   |__ api
-│   │   ├── entities
-|   |   |__ enum  
-│   │   ├── exceptions
-|   |   |__ model 
-│   │   ├── repository
-│   │   ├── response
-│   │   └── services
-│   ├── infrastructure
-│   │   ├── api
-│   │   │   ├── middlewares
-│   │   │   ├── routers
-│   │   │   ├── schemas
-│   │   │   └── util
-|   |   |__ api-client        
-│   │   └── repositories
-│   │       |── Postgres
-│   │       |    ├── adapter
-│   │       |    └── dao
-|   |       |__ redis
-|   |            |__ adapter
-|   |            |__ dao        
-|   |      
-│   └── util
 ├── docs
 ├── infra
 ├── manifests
