@@ -2,13 +2,15 @@ export interface IEventoOut {
     id: number;
     nombre: string;
     fecha: string;
-    horaInicio: string;
-    horaFin: string;
+    hora_inicio: string;
+    hora_fin: string;
     capacidad: number;
     precio: number;
     descripcion: string;
-    tipoEvento: number;
+    tipo_evento: TipoEvento;
     direccion: IDireccion;
+    usuarios: Array<string>;
+    usuarios_inscritos: number;
     lugaresCercanos?: ILugaresCercanos[];
 }
 
@@ -19,6 +21,11 @@ export interface IDireccion {
     direccion: string;
     latitud?: string;
     longitud?: string;
+}
+
+interface TipoEvento {
+    id: number;
+    descripcion: string;
 }
 
 export interface ILugaresCercanos {

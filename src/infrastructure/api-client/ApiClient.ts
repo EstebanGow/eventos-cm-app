@@ -4,19 +4,17 @@ import axios from 'axios';
 import { ApiClientRest } from '@domain/api';
 import { DEPENDENCY_CONTAINER, TYPES } from '@configuration';
 import { RedisEventosRepository } from '@infrastructure/repositories/redis';
-import { Client } from '@googlemaps/google-maps-services-js';
 import { IEventoOut, ILugaresCercanos } from '@application/data/out/IEventoOut';
 import { IDireccion } from '@application/data';
+import { API_KEY } from '@util';
 
 @injectable()
 export class ApiClient implements ApiClientRest {
     private redisClient = DEPENDENCY_CONTAINER.get<RedisEventosRepository>(TYPES.RedisEventosRepository);
-    private client = new Client({});
-    API_KEY: any;
-
     async ubicacionesCercanas(evento: IEventoOut): Promise<ILugaresCercanos[]> {
         try {
             const claveRedis = `${evento.id}`;
+            await this.redisClient.deleteSource(claveRedis);
             let lugaresCercanos = await this.redisClient.getOne(claveRedis);
             if (!lugaresCercanos) {
                 lugaresCercanos = await this.lugaresCercanosGoogle(evento.direccion.latitud, evento.direccion.longitud);
@@ -34,7 +32,7 @@ export class ApiClient implements ApiClientRest {
             const response = await axios.get('https://maps.googleapis.com/maps/api/geocode/json', {
                 params: {
                     address: direccion.direccion,
-                    key: this.API_KEY,
+                    key: API_KEY,
                 },
             });
 
@@ -56,15 +54,16 @@ export class ApiClient implements ApiClientRest {
         type = 'point_of_interest',
     ): Promise<any> {
         try {
-            const response = await this.client.placesNearby({
+            const url = `https://maps.googleapis.com/maps/api/place/nearbysearch/json`;
+            const response = await axios.get(url, {
                 params: {
-                    location: { lat: latitude, lng: longitude },
+                    location: `${latitude},${longitude}`,
                     radius: radius,
                     type: type,
-                    key: this.API_KEY,
+                    key: API_KEY,
                 },
             });
-
+            console.log(response);
             const places = response.data.results;
             const lugaresCercanos: ILugaresCercanos[] = [];
             places.forEach((lugaresMaps: any) => {

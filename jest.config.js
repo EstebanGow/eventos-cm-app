@@ -14,5 +14,6 @@ module.exports = {
         '^@configuration/(.*)$': resolve(__dirname, './src/configuration/$1'),
         '^@configuration': resolve(__dirname, './src/configuration/index'),
         '^@util': resolve(__dirname, './src/util/index'),
+        "axios": "axios/dist/node/axios.cjs",
     },
 };

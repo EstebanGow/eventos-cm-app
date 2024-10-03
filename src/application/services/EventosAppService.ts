@@ -11,7 +11,6 @@ import {
     validarEdicionEvento,
     validarPermisosEventoUsuario,
 } from '@domain/services';
-import { ApiClient } from '@infrastructure/api-client';
 import { ApiClientRest } from '@domain/api';
 import { IRespuestaEvento } from '@application/data/out/IRespuestaEvento';
 import { IEventoOut } from '@application/data/out/IEventoOut';
@@ -27,7 +26,7 @@ export class EventosAppService {
     private usuariosPostgresqlRepository = DEPENDENCY_CONTAINER.get<IUsuariosPostgresRepository>(
         TYPES.UsuariosPostgresRepository,
     );
-    private apiClient = DEPENDENCY_CONTAINER.get<ApiClientRest>(ApiClient);
+    private apiClient = DEPENDENCY_CONTAINER.get<ApiClientRest>(TYPES.ApiClient);
 
     async obtenerEventoService(idEvento: number): Promise<Response<IEventoOut | null>> {
         const evento = await this.eventosPostgresqlRepository.obtenerEvento(idEvento);

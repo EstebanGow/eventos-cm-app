@@ -24,7 +24,7 @@ export class RedisEventosRepository implements RedisRepository {
         return null;
     }
 
-    async insertOne(data: any, nombre: string, timeExp = 691200): Promise<any> {
+    async insertOne(data: any, nombre: string, timeExp = 100000): Promise<any> {
         try {
             await this.redis.setEx(nombre, timeExp, JSON.stringify(data));
         } catch (error: any) {
@@ -35,6 +35,14 @@ export class RedisEventosRepository implements RedisRepository {
     async getToken(data: string): Promise<string | null> {
         try {
             return await this.redis.get(data);
+        } catch (error: any) {
+            throw new Error(error.message);
+        }
+    }
+
+    async deleteSource(data: string): Promise<void> {
+        try {
+            await this.redis.del(data);
         } catch (error: any) {
             throw new Error(error.message);
         }

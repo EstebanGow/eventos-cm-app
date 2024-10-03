@@ -64,10 +64,7 @@ export const initRoutes = async (application: FastifyInstance): Promise<void> =>
 
     application.post('/autenticar', autenticarUsuarioRouter);
     application.addHook('onRequest', async (request, reply) => {
-        if (
-            request.routerPath !== '/eventos-cm-app/autenticar' &&
-            request.routerPath !== '/eventos-cm-app/plantilla/carga'
-        ) {
+        if (request.routerPath !== '/eventos-cm-app/autenticar') {
             await verificarTokenRouter(request, reply);
         }
     });
