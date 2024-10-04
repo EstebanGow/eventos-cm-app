@@ -1,4 +1,9 @@
-import { DEFAULT_400_ERROR_SCHEMA, DEFAULT_500_ERROR_SCHEMA, beauty, validationParser } from '../config';
+import {
+    DEFAULT_400_ERROR_SCHEMA,
+    DEFAULT_500_ERROR_SCHEMA,
+    beauty,
+    validationParser,
+} from '../config';
 import { v4 as uuidv4 } from 'uuid';
 import { SwaggerTag } from '@domain/enum';
 import { usuarioEventoSchema } from '@infrastructure/api/schemas';

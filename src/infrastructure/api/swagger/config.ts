@@ -83,3 +83,12 @@ export const DEFAULT_500_ERROR_SCHEMA = {
     statusCode: 500,
     cause: 'REPOSITORY_ERROR',
 };
+export const DEFAULT_200_ERROR_SCHEMA = {
+    isError: true,
+    message: 'No existe el evento enviado',
+    code: 'BAD_MESSAGE',
+    cause: 'Error',
+    timestamp: '2024-10-04T02:38:56.732Z',
+    statusCode: 200,
+    id: '70d4c4b34f1c03989c06cc1dec8db10477e61187',
+};

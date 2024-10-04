@@ -1,28 +1,30 @@
 import { IEditarEvento, IEvento } from '@application/data';
+import { IEventoOut } from '@application/data/out/IEventoOut';
 import { TiposEvento, TiposUsuaario } from '@domain/enum';
 import {
-    BadMessageException,
+    ApiRestException,
     ERROR_ASOCIAR_EVENTO_USUARIO,
     ERROR_CREACION_EVENTO,
     ERROR_EDICION_EVENTO,
 } from '@domain/exceptions';
+import { UsuarioModel } from '@domain/model';
 import moment from 'moment-timezone';
 
-export const validarPermisosEventoUsuario = (usuario: any, evento: any) => {
+export const validarPermisosEventoUsuario = (usuario: UsuarioModel, evento: IEventoOut) => {
     validarExistenciaEvento(evento);
     validarExistenciaUsuario(usuario);
 
-    const existeUsuario = evento[0].usuarios.filter((u: any) => u.identificacion === usuario[0].identificacion);
+    const existeUsuario = evento.usuarios.filter((u: any) => u.identificacion === usuario.identificacion);
     if (existeUsuario.length) {
-        throw new BadMessageException(
+        throw new ApiRestException(
             ERROR_ASOCIAR_EVENTO_USUARIO,
-            `El usuario ${usuario[0].identificacion} ya se encuentra registrado al evento ${evento[0].nombre}`,
+            `El usuario ${usuario.identificacion} ya se encuentra registrado al evento ${evento.nombre}`,
         );
     }
 
-    if (evento[0].tipo_evento.id === TiposEvento.VIP) {
-        if (usuario[0].tipo_usuario.id !== TiposUsuaario.VIP) {
-            throw new BadMessageException(
+    if (evento.tipo_evento.id === TiposEvento.VIP) {
+        if (usuario.tipo_usuario.id !== TiposUsuaario.VIP) {
+            throw new ApiRestException(
                 ERROR_ASOCIAR_EVENTO_USUARIO,
                 `El usuario no tiene permisos para asistir al evento VIP`,
             );
@@ -30,13 +32,13 @@ export const validarPermisosEventoUsuario = (usuario: any, evento: any) => {
     }
 };
 
-export const validarCapacidadEvento = (evento: any) => {
-    if (evento[0].usuarios_inscritos < evento[0].capacidad) {
+export const validarCapacidadEvento = (evento: IEventoOut) => {
+    if (evento.usuarios_inscritos < evento.capacidad) {
         return true;
     }
-    throw new BadMessageException(
+    throw new ApiRestException(
         ERROR_ASOCIAR_EVENTO_USUARIO,
-        `El evento no tiene capacidad, total asistentes: ${evento[0].capacidad}`,
+        `El evento no tiene capacidad, total asistentes: ${evento.capacidad}`,
     );
 };
 
@@ -44,7 +46,7 @@ export const validarCreacionEvento = (evento: IEvento) => {
     const fechaActual = moment().tz('America/Bogota').format('YYYY-MM-DD HH:mm');
     const fechaEvento = moment(`${evento.fecha} ${evento.horaInicio}`).format('YYYY-MM-DD HH:mm');
     if (fechaActual > fechaEvento) {
-        throw new BadMessageException(
+        throw new ApiRestException(
             ERROR_CREACION_EVENTO,
             `la fecha del evento no puede ser menor a la fecha actual`,
         );
@@ -60,32 +62,32 @@ export const validarCreacionEventoImportacion = (evento: IEvento) => {
     return { error: false };
 };
 
-export const validarEdicionEvento = (eventoEditar: IEditarEvento, evento: any) => {
+export const validarEdicionEvento = (eventoEditar: IEditarEvento, evento: IEventoOut) => {
     validarExistenciaEvento(evento);
     const fechaActual = moment().tz('America/Bogota').format('YYYY-MM-DD HH:mm:ss');
-    const fechaEventoActual = moment(`${evento[0].fecha} ${evento[0].hora_inicio}`).format('YYYY-MM-DD HH:mm:ss');
+    const fechaEventoActual = moment(`${evento.fecha} ${evento.hora_inicio}`).format('YYYY-MM-DD HH:mm:ss');
     const nuevaFechaEvento = moment(`${eventoEditar.fecha} ${eventoEditar.horaInicio}`).format('YYYY-MM-DD HH:mm:ss');
     if (fechaEventoActual < fechaActual) {
-        throw new BadMessageException('Error edicion evento', `No se puede editar un evento que ya paso`);
+        throw new ApiRestException('Error edicion evento', `No se puede editar un evento que ya paso`);
     }
     if (fechaActual > nuevaFechaEvento) {
-        throw new BadMessageException(ERROR_EDICION_EVENTO, `la fecha del evento no puede ser menor a la fecha actual`);
+        throw new ApiRestException(ERROR_EDICION_EVENTO, `la fecha del evento no puede ser menor a la fecha actual`);
     }
 };
 
-const validarExistenciaEvento = (evento: any) => {
-    if (!evento.length) {
-        throw new BadMessageException('Error', `No existe el evento enviado`);
+export const validarExistenciaEvento = (evento: IEventoOut) => {
+    if (!evento) {
+        throw new ApiRestException('Error', `No existe el evento enviado`);
     }
 };
 
-const validarExistenciaUsuario = (usuario: any) => {
-    if (!usuario.length) {
-        throw new BadMessageException('Error', `No existe el usuario enviado`);
+export const validarExistenciaUsuario = (usuario: UsuarioModel) => {
+    if (!usuario) {
+        throw new ApiRestException('Error', `No existe el usuario enviado`);
     }
 };
 
-function obtenerDiaSemana(fecha: string) {
+export function obtenerDiaSemana(fecha: string) {
     const date = new Date(fecha);
     const diaSemana = ['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'];
     return diaSemana[date.getDay()];
