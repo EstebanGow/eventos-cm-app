@@ -35,12 +35,13 @@ export class ApiClient implements ApiClientRest {
                     key: API_KEY,
                 },
             });
-
             if (response.data.status === 'OK') {
                 const { lat, lng } = response.data.results[0].geometry.location;
                 return { latitude: lat, longitude: lng };
             }
-            throw new Error(`Localizacion Fallida. Estado: ${response.data.status}`);
+            if (response.data.status === 'ZERO_RESULTS') {
+                return { latitude: '', longitude: '' };
+            }
         } catch (error: any) {
             console.error('Error obteniendo coordenadas:', error.message);
             throw error;
