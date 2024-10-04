@@ -18,6 +18,7 @@ import { IEventoIdOut } from '@application/data/out/IEventoIdOut';
 import { IMensajeOut } from '@application/data/out/IMensajeOut';
 import { IMetricasOut } from '@application/data/out/IMetricasOut';
 import { RedisEventosRepository } from '@infrastructure/repositories/redis';
+import { ApiRestException, ERROR_ELIMINAR } from '@domain/exceptions';
 
 @injectable()
 export class EventosAppService {
@@ -42,11 +43,11 @@ export class EventosAppService {
     async eliminarEventoService(idEvento: number): Promise<Response<IMensajeOut | null>> {
         const evento = await this.eventosPostgresqlRepository.obtenerEvento(idEvento);
         if (!evento) {
-            return Result.error({ mensaje: `no existe el evento ${idEvento}` });
+            throw new ApiRestException(ERROR_ELIMINAR, `no existe el evento ${idEvento}`);
         }
         const idDireccion = evento.direccion.id;
         await this.eventosPostgresqlRepository.eliminarEventoTransaccion(idEvento, idDireccion);
-        await this.redisClient.deleteSource(idEvento);
+        await this.redisClient.deleteSource(`${idEvento}`);
         return Result.ok({ mensaje: 'Evento eliminado correctamente' });
     }
 
@@ -72,7 +73,7 @@ export class EventosAppService {
         const evento = await this.eventosPostgresqlRepository.obtenerEvento(data.idEvento);
         validarEdicionEvento(data, evento);
         await this.eventosPostgresqlRepository.editarEventoTransaccion(data);
-        await this.redisClient.deleteSource(data.idEvento);
+        await this.redisClient.deleteSource(`${data.idEvento}`);
         return Result.ok({ idEvento: data.idEvento });
     }
 
