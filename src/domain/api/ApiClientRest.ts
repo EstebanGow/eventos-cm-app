@@ -1,7 +1,8 @@
 import { IDireccion } from '@application/data';
-import { IEventoOut } from '@application/data/out/IEventoOut';
+import { IEventoOut, ILugaresCercanos } from '@application/data/out/IEventoOut';
+import { ICoordenadasModel } from '@domain/model/CoordenadasModel';
 
 export interface ApiClientRest {
-    ubicacionesCercanas(evento: IEventoOut): Promise<any>;
-    obtenerCoordenadas(direccion: IDireccion): Promise<any>;
+    ubicacionesCercanas(evento: IEventoOut): Promise<ILugaresCercanos[]>;
+    obtenerCoordenadas(direccion: IDireccion): Promise<ICoordenadasModel>;
 }

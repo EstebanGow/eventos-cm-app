@@ -7,6 +7,7 @@ import { RedisEventosRepository } from '@infrastructure/repositories/redis';
 import { IEventoOut, ILugaresCercanos } from '@application/data/out/IEventoOut';
 import { IDireccion } from '@application/data';
 import { API_KEY } from '@util';
+import { ICoordenadasModel } from '@domain/model/CoordenadasModel';
 
 @injectable()
 export class ApiClient implements ApiClientRest {
@@ -26,7 +27,7 @@ export class ApiClient implements ApiClientRest {
         }
     }
 
-    async obtenerCoordenadas(direccion: IDireccion): Promise<any> {
+    async obtenerCoordenadas(direccion: IDireccion): Promise<ICoordenadasModel> {
         try {
             const response = await axios.get('https://maps.googleapis.com/maps/api/geocode/json', {
                 params: {
@@ -38,12 +39,9 @@ export class ApiClient implements ApiClientRest {
                 const { lat, lng } = response.data.results[0].geometry.location;
                 return { latitude: lat, longitude: lng };
             }
-            if (response.data.status === 'ZERO_RESULTS') {
-                return { latitude: '', longitude: '' };
-            }
+            return { latitude: '', longitude: '' };
         } catch (error: any) {
-            console.error('Error obteniendo coordenadas:', error.message);
-            throw error;
+            throw new Error('Error obteniendo coordenadas:', error.toString());
         }
     }
 

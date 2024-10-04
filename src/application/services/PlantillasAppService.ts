@@ -40,7 +40,7 @@ export class PlantillasAppService {
         return Result.ok(base64);
     }
 
-    async procesarArchivoService(data: IEventoImportacion): Promise<Response<any | null>> {
+    async procesarArchivoService(data: IEventoImportacion): Promise<Response<string | null>> {
         const archivo = obtnerPlantilla(data.data.nombre_archivo);
         const plantilla = leerArchivoExcel(archivo);
         validarColumnasPlantillaService(plantilla.encabezados);

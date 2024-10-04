@@ -24,7 +24,7 @@ export class RedisEventosRepository implements RedisRepository {
         return null;
     }
 
-    async insertOne(data: any, nombre: string, timeExp = 100000): Promise<any> {
+    async insertOne(data: any, nombre: string, timeExp = 19000): Promise<any> {
         try {
             await this.redis.setEx(nombre, timeExp, JSON.stringify(data));
         } catch (error: any) {
