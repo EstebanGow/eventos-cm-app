@@ -40,7 +40,7 @@ export class RedisEventosRepository implements RedisRepository {
         }
     }
 
-    async deleteSource(data: string): Promise<void> {
+    async deleteSource(data: any): Promise<void> {
         try {
             await this.redis.del(data);
         } catch (error: any) {

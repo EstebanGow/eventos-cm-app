@@ -14,7 +14,6 @@ export class ApiClient implements ApiClientRest {
     async ubicacionesCercanas(evento: IEventoOut): Promise<ILugaresCercanos[]> {
         try {
             const claveRedis = `${evento.id}`;
-            await this.redisClient.deleteSource(claveRedis);
             let lugaresCercanos = await this.redisClient.getOne(claveRedis);
             if (!lugaresCercanos) {
                 lugaresCercanos = await this.lugaresCercanosGoogle(evento.direccion.latitud, evento.direccion.longitud);

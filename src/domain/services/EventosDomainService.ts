@@ -46,10 +46,7 @@ export const validarCreacionEvento = (evento: IEvento) => {
     const fechaActual = moment().tz('America/Bogota').format('YYYY-MM-DD HH:mm');
     const fechaEvento = moment(`${evento.fecha} ${evento.horaInicio}`).format('YYYY-MM-DD HH:mm');
     if (fechaActual > fechaEvento) {
-        throw new ApiRestException(
-            ERROR_CREACION_EVENTO,
-            `la fecha del evento no puede ser menor a la fecha actual`,
-        );
+        throw new ApiRestException(ERROR_CREACION_EVENTO, `la fecha del evento no puede ser menor a la fecha actual`);
     }
 };
 

@@ -46,7 +46,7 @@ export class EventosAppService {
         }
         const idDireccion = evento.direccion.id;
         await this.eventosPostgresqlRepository.eliminarEventoTransaccion(idEvento, idDireccion);
-        await this.redisClient.deleteSource(``);
+        await this.redisClient.deleteSource(idEvento);
         return Result.ok({ mensaje: 'Evento eliminado correctamente' });
     }
 
@@ -72,7 +72,7 @@ export class EventosAppService {
         const evento = await this.eventosPostgresqlRepository.obtenerEvento(data.idEvento);
         validarEdicionEvento(data, evento);
         await this.eventosPostgresqlRepository.editarEventoTransaccion(data);
-
+        await this.redisClient.deleteSource(data.idEvento);
         return Result.ok({ idEvento: data.idEvento });
     }
 
@@ -80,9 +80,7 @@ export class EventosAppService {
         const usuario = await this.usuariosPostgresqlRepository.obtenerUsuario(data.idUsuario);
         const evento = await this.eventosPostgresqlRepository.obtenerEvento(data.idEvento);
         validarPermisosEventoUsuario(usuario, evento);
-        console.log('pase')
         validarCapacidadEvento(evento);
-        console.log('esta tambien')
         await this.eventosPostgresqlRepository.inscribirUsuarioEvento(data);
         return Result.ok({ mensaje: 'Usuario inscrito al evento de manera exitosa' });
     }

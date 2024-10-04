@@ -9,6 +9,14 @@ Servicio para la creación de eventos, usuarios e inscripción de usuarios a eve
 - [Primeros Pasos](#primeros-pasos)
 - [Scripts](#scripts)
 
+## Video explicativo Proyecto
+https://drive.google.com/file/d/1334mvBb_IAEHdJ2VKWGXfRkWzl-5bPZv/view?usp=drive_link
+
+## Recursos Base datos y Diagramas
+https://docs.google.com/document/d/13He_63KWoQlrS-fBtnJDkpODnfDprVBNlRi15-y7eyk/edit?usp=sharing
+https://drive.google.com/file/d/18ovBlk4asQVg0w0D38nB5mai0g3K4OLL/view?usp=sharing
+
+
 ## Estructura del Proyecto
 
 ```
